@@ -5,6 +5,6 @@ package com.code.day.level;
  */
 public class Level {
 
-    
+    Layer[] layers;
 
 }
