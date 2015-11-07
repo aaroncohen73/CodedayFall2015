@@ -5,6 +5,7 @@ package com.code.day.level;
  */
 public class Level {
 
-    Girder[] girders;
+    private Girder[] girders;
+    private Barrel[] barrels;
 
 }
