@@ -144,7 +144,7 @@ public class Barrel{
         Barrel barrel = new Barrel();
 
         barrel.animTimer = 0.0f;
-        barrel.fallMode = true;
+        barrel.fallMode = false;
         barrel.beRemoved = false;
 
         barrel.position = new Vector2(startX, startY);
