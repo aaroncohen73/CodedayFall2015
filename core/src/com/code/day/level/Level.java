@@ -15,12 +15,17 @@ public class Level {
     public void load() {
         girders = new ArrayList<Girder>();
         barrels = new ArrayList<Barrel>();
-        
-        girders.add(Girder.createGirder (15, 160, 126, 160, true));
-        girders.add(Girder.createGirder (100, 159, 224, 157, true));
-        //girders.add(Girder.createGirder(50, 160, 200, 175, true));
-        //girders.add(Girder.createGirder(50, 130, 200, 125, true));
-        //girders.add(Girder.createGirder(50, 100, 200, 95, true));
+
+        girders.add(Girder.createGirder (15, 160, 126, 160, true));//girder1 flat
+        girders.add(Girder.createGirder (135, 159, 200, 154, true));//girder1
+        girders.add(Girder.createGirder(31, 126, 223, 135, true));//girder2
+        girders.add(Girder.createGirder(15, 104, 200, 96, true));//girder3
+        girders.add(Girder.createGirder(31, 66, 223, 75, true));//girder4
+        girders.add(Girder.createGirder(15, 44, 200, 36, true));//girder5
+        girders.add(Girder.createGirder(7, 8, 130, 8, true));//girder6 flat
+        girders.add(Girder.createGirder(150, 10, 223, 14, true));//girder6
+        girders.add(Girder.createGirder(79, 177, 100, 177, true));//The_unnamed_woman lower
+        girders.add(Girder.createGirder(103, 185, 150, 185, true));//peach higher
     }
 
     public void update() {
