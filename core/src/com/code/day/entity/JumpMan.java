@@ -2,6 +2,7 @@ package com.code.day.entity;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.code.day.level.Barrel;
@@ -15,11 +16,14 @@ import java.util.ArrayList;
  */
 public class JumpMan {
     public static final float JUMP_HEIGHT = Barrel.HEIGHT + 2.0f;
-    public static final float JUMP_VELOCITY = 2.5f;
+    public static final float JUMP_VELOCITY = 5.5f;
+    public static final float RUN_VELOCITY = 4.0f;
     public static final float EPSILON = 2.0f;
 
+    private float animTimer = 0.0f;
+
     private Vector2 position;
-    private Vector2 velocity;
+    private Vector2 velocity = new Vector2(0.0f, 0.0f);
     private Vector2 jumpPosition;
 
     private boolean onLadder = false;
@@ -33,16 +37,25 @@ public class JumpMan {
 
     private Girder currentGirder = null;
 
+    public JumpMan(float posX, float posY, Girder startGirder){
+        position.set(posX, posY);
+        currentGirder = startGirder;
+    }
+
     public void update(float delta){
+        animTimer += delta;
         updateInput();
 
+        // Change x position if left/right is pressed OR they're jumping AND running
         if((keyLeft || keyRight) || jumpRunning) {
-            position.x += (keyLeft ? -1 : 1) * velocity.x * delta;
+            position.x += (keyLeft ? -1 : 1) * RUN_VELOCITY * delta;
 
+            // Only set y position to girder y if left/right is pressed AND they're NOT jumping AND running
             if(!jumpRunning)
                 position.y = (position.x * currentGirder.getSlope()) + currentGirder.getYIntercept();
         }
 
+        // Change y position if they're jumping
         if(jumping){
             // Check if you've jumped high enough, if so, set velocity to downwards
             if(velocity.y > 0 && position.y - jumpPosition.y >= JUMP_HEIGHT)
@@ -61,6 +74,11 @@ public class JumpMan {
 
             position.y += velocity.y;
         }
+
+        // TODO: Finish ladder climbing logic
+        else{
+
+        }
     }
 
     private void updateInput(){
@@ -69,11 +87,15 @@ public class JumpMan {
         keyLeft = false;
         keyRight = false;
 
-        if(Gdx.input.isKeyPressed(Input.Keys.UP))
+        // TODO: Finish ladder climbing logic
+        if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
             keyUp = true;
+        }
 
-        else if(Gdx.input.isKeyPressed(Input.Keys.DOWN))
+        // TODO: Finish ladder climbing logic
+        else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             keyDown = true;
+        }
 
         else if(Gdx.input.isKeyPressed(Input.Keys.LEFT))
             keyLeft = true;
@@ -82,7 +104,7 @@ public class JumpMan {
             keyRight = true;
 
         // Jump if not jumping, not on ladder
-        else if(Gdx.input.isKeyPressed(Input.Keys.C) && !jumping && !onLadder){
+        if(Gdx.input.isKeyPressed(Input.Keys.C) && !jumping && !onLadder){
             jumpPosition = position;
             jumping = true;
             velocity.y = JUMP_VELOCITY;
@@ -115,5 +137,9 @@ public class JumpMan {
                     return girder;
 
         return nearestGirder;
+    }
+
+    // TODO: Finish drawing sprite function
+    public void draw(SpriteBatch batch){
     }
 }
