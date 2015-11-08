@@ -22,6 +22,8 @@ public class Girder {
     private ArrayList<Ladder> ladders;
     private boolean isLast;
 
+    private Girder nextGirder = null;   // TODO: Set nextGirder in the constructor
+
     private Girder() {} //Use factory function instead
 
     public Vector2 getBeginning() {
@@ -59,6 +61,10 @@ public class Girder {
 
     public void addLadder(Ladder ladder) {
         ladders.add(ladder);
+    }
+
+    public Girder getNextGirder(){
+        return nextGirder;
     }
 
     public static Girder createGirder(int startX, int startY, int endX, int endY, boolean isLast) {

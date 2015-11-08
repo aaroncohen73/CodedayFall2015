@@ -2,10 +2,17 @@ package com.code.day;
 
 import com.badlogic.gdx.Screen;
 
+import com.code.day.level.Barrel;
+import com.code.day.level.Girder;
+import com.code.day.level.Ladder;
+import com.code.day.level.Level;
+
 /**
  * Created by merfoo on 11/7/15.
  */
 public class GameScreen implements Screen {
+
+    private Level level;
 
     @Override
     public void show(){
