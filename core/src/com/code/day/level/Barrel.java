@@ -31,7 +31,7 @@ public class Barrel{
     private Girder currentGirder;
     private ArrayList<Integer> ladderPath;
 
-    public Barrel() {}
+    private Barrel() {}
 
     public Vector2 getPosition() {
         return position;
