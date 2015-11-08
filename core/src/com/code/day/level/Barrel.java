@@ -9,12 +9,14 @@ import com.code.day.gfx.AnimLoader;
  */
 public class Barrel{
 
-    private static final Animation BARREL_SIDE_ANIM = AnimLoader.loadAnim("barrel.png", 16, 16, 0, 7, 0.1f);
-    private static final Animation BARREL_FRONT_ANIM = AnimLoader.loadAnim("barrel2.png", 16, 16, 0, 1, 0.2f);
+    public static final int BARREL_XVEL = 30;
 
-    private Vector2 position;
-    private Vector2 velocity;
+    private static final Animation BARREL_SIDE_ANIM = AnimLoader.loadAnim("barrelSheet.png", 16, 16, 0, 7, 0.1f);
+    private static final Animation BARREL_FRONT_ANIM = AnimLoader.loadAnim("barrelLadderSheet.png", 16, 16, 0, 1, 0.2f);
 
-    private Girder current;
+    private Vector2 position = new Vector2();
+    private Vector2 velocity = new Vector2(30, 0);
+
+    private Girder currentGirder;
 
 }
