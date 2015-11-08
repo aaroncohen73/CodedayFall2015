@@ -37,8 +37,10 @@ public class Level {
         girders.get(6).setNextGirder(girders.get(7));
 
         Ladder.createLadder(100, girders.get(0), girders.get(2), true);
+        Ladder.createLadder(150, girders.get(1), girders.get(2), false);
 
         barrels.add(Barrel.createBarrel(15, 160, 1, girders.get(0)));
+        barrels.get(0).addLadder(1);
     }
 
     public void update(float delta) {
