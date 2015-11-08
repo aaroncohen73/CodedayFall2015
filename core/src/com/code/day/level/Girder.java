@@ -83,6 +83,13 @@ public class Girder {
         return yIntercept;
     }
 
+    public boolean isSame(Girder girder){
+        Vector2 rBeg = girder.getBeginning();
+        Vector2 rEnd = girder.getEnd();
+
+        return beginning.x == rBeg.x && beginning.y == rBeg.y && end.x == rEnd.x && end.y == rEnd.y;
+    }
+
     public void draw(SpriteBatch batch) {
         for (Ladder ladder : ladders) {
             ladder.draw(batch);

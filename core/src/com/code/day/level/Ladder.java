@@ -11,7 +11,7 @@ import com.code.day.gfx.AnimLoader;
  */
 public class Ladder {
 
-    private static final int TILE_WIDTH = 8;
+    public static final int TILE_WIDTH = 8;
     private static final int TILE_HEIGHT = 5;
 
     private static final Texture LADDER_TILABLE = new Texture("ladder.png");
@@ -120,6 +120,7 @@ public class Ladder {
         ladder.girder = beginning;
         ladder.nextGirder = end;
         ladder.broken = broken;
+        ladder.height = beginY - endY;
 
         beginning.addLadder(ladder);
 

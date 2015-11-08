@@ -11,6 +11,7 @@ import com.code.day.gfx.AnimLoader;
 import com.code.day.input.InputHandler;
 import com.code.day.level.Barrel;
 import com.code.day.level.Girder;
+import com.code.day.level.Ladder;
 import com.code.day.level.Level;
 
 import java.util.ArrayList;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
  */
 public class JumpMan {
 
+    private static final int WIDTH = 16;
+    private static final int HEIGHT = 16;
     private static final Animation JUMPMAN_IDLE_LEFT = AnimLoader.loadAnim("jumpManSheet.png", 16, 16, 2, 3, 0.1f);
     private static final Animation JUMPMAN_IDLE_RIGHT = AnimLoader.loadAnim("jumpManSheet.png", 16, 16, 3, 4, 0.1f);
     private static final Animation JUMPMAN_WALK_LEFT = AnimLoader.loadAnim("jumpManSheet.png", 16, 16, 0, 3, 0.2f);
@@ -30,13 +33,16 @@ public class JumpMan {
     private static final Animation JUMPMAN_CLIMB_LADDER = AnimLoader.loadAnim("jumpManSheet.png", 16, 16, 7, 9, 0.4f);
     private static final Animation JUMPMAN_CLIMB_UP = AnimLoader.loadAnim("jumpManSheet.png", 16, 16, 9, 11, 0.2f);
 
-    public static final float JUMP_HEIGHT = Barrel.HEIGHT + 2.0f;
-    public static final float JUMP_VELOCITY = 2.5f;
+    public static final float JUMP_HEIGHT = Barrel.HEIGHT + 5.0f;
+    public static final float JUMP_VELOCITY = 0.75f;
+    public static final float RUN_VELOCITY = 25.0f;
     public static final float EPSILON = 2.0f;
 
+    private float animTimer = 0.0f;
+
     private Vector2 position;
-    private Vector2 velocity;
-    private Vector2 jumpPosition;
+    private Vector2 velocity = new Vector2(0.0f, 0.0f);
+    private Vector2 jumpPosition = new Vector2(0.0f, 0.0f);
 
     private boolean facingRight = true;
     private float animTime = 0.0f;
@@ -44,8 +50,20 @@ public class JumpMan {
     private boolean onLadder = false;
     private boolean jumping = false;
     private boolean jumpRunning = false;
+    private int jumpDirection = 1;
+
+    private boolean keyUp = false;
+    private boolean keyDown = false;
+    private boolean keyLeft = false;
+    private boolean keyRight = false;
 
     private Girder currentGirder = null;
+    private Ladder currentLadder = null;
+
+    public JumpMan(float posX, float posY, Girder startGirder){
+        position.set(posX, posY);
+        currentGirder = startGirder;
+    }
 
     public JumpMan(int startX, int startY) {
         position = new Vector2(startX, startY);
@@ -53,7 +71,9 @@ public class JumpMan {
     }
 
     public void update(float delta){
-        currentGirder = getNearestGirder(Level.girders);
+        animTimer += delta;
+        updateInput();
+        currentGirder = getNearestGirder();
 
         if (InputHandler.LEFT_PRESSED) facingRight = false;
         else if (InputHandler.RIGHT_PRESSED) facingRight = true;
@@ -68,21 +88,33 @@ public class JumpMan {
             InputHandler.ALT_TRIGGERED = false;
         }
 
-        if((InputHandler.LEFT_PRESSED || InputHandler.RIGHT_PRESSED) || jumpRunning) {
-            position.x += (facingRight ? 1 : -1) * velocity.x * delta;
+        // Change x position if left/right is pressed OR they're jumping AND running
+        if((keyLeft || keyRight) || jumpRunning) {
+            float posXInc = 0.0f;
 
-            if(!jumpRunning)
-                position.y = (position.x * currentGirder.getSlope()) + currentGirder.getYIntercept();
+            if(jumpRunning)
+                posXInc = jumpDirection * RUN_VELOCITY * delta;
+
+            // Only set y position to girder y if left/right is pressed AND they're NOT jumping AND running
+            if(!jumpRunning) {
+                posXInc = (keyLeft ? -1 : 1) * RUN_VELOCITY * delta;
+                position.y = (position.x * currentGirder.getSlope()) + currentGirder.getYIntercept() + (Girder.TILE_HEIGHT / 2.0f);
+            }
+
+            position.x += posXInc;
         }
 
+        // Change y position if they're jumping
         if(jumping){
             // Check if you've jumped high enough, if so, set velocity to downwards
-            if(velocity.y > 0 && position.y - jumpPosition.y >= JUMP_HEIGHT)
+            if(velocity.y > 0 && Math.abs(position.y - jumpPosition.y) >= JUMP_HEIGHT)
                 velocity.y = -JUMP_VELOCITY;
 
             // If falling, check if hitting girder, stop falling
             if(velocity.y < 0) {
-                if (Math.abs(position.y - ((position.x * currentGirder.getSlope()) + currentGirder.getYIntercept())) < EPSILON) {
+                currentGirder = getNearestGirder();
+
+                if (Math.abs(position.y - ((position.x * currentGirder.getSlope()) + currentGirder.getYIntercept() + (Girder.TILE_HEIGHT / 2.0f))) < EPSILON) {
                     jumping = false;
                     jumpRunning = false;
                     velocity.y = 0;
@@ -90,6 +122,34 @@ public class JumpMan {
             }
 
             position.y += velocity.y;
+        }
+
+        // Change y position if they're climbing a ladder
+        if(onLadder){
+            if(keyUp){
+                currentGirder = currentLadder.getGirder();
+                position.y += JUMP_VELOCITY;
+            }
+
+            else if(keyDown){
+                currentGirder = currentLadder.getNextGirder();
+                position.y -= JUMP_VELOCITY;
+            }
+
+            float midX = currentLadder.getX() + (Ladder.TILE_WIDTH / 2.0f);
+            float ladTop = ((midX * currentLadder.getGirder().getSlope()) + currentLadder.getGirder().getYIntercept());// - (Girder.TILE_HEIGHT / 2.0f));
+
+            if ((ladTop - position.y) <= 0) {
+                onLadder = false;
+                System.out.println("1 WHY DOES THIS HAVE TO HAPPEN LIKE THIS");
+            }
+
+            float ladBot = ((midX * currentLadder.getNextGirder().getSlope()) + currentLadder.getNextGirder().getYIntercept());// + (Girder.TILE_HEIGHT / 2.0f));
+
+            if ((position.y - ladBot) <= (Girder.TILE_HEIGHT / 2.0f) + (HEIGHT / 2.0f)) {
+                onLadder = false;
+                System.out.println("2ND FOR LOOP THING IF STATEMENT MANN IDK TBH");
+            }
         }
     }
 
@@ -106,27 +166,78 @@ public class JumpMan {
         batch.draw(currentAnim.getKeyFrame(animTime), position.x, position.y);
     }
 
-    private Girder getNearestGirder(ArrayList<Girder> girders) {
-        Girder nearestGirder = null;
-//        float smallestDist = 0.0f;
-//
-//        for (Girder girder : girders) {
-//            Vector2 beg = girder.getBeginning();
-//            Vector2 end = girder.getEnd();
-//            Vector2 cen = new Vector2((beg.x + end.x) / 2.0f, (beg.y + end.y) / 2.0f);
-//            float small = Vector2.dst(position.x, position.y, cen.x, cen.y);
-//
-//            if (small < smallestDist) {
-//                nearestGirder = girder;
-//                smallestDist = small;
-//            }
-//        }
+    private void updateInput(){
+        keyUp = false;
+        keyDown = false;
+        keyLeft = false;
+        keyRight = false;
 
-        for(Girder girder : girders)
+        // TODO: Finish ladder climbing logic
+        if(Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            Ladder nearestLadder = getNearestLadder();//currentGirder);
+
+            if(nearestLadder != null) {
+                currentLadder = nearestLadder;
+                onLadder = true;
+                System.out.println("FOUND NEAR LADDER YOOO");
+            }
+
+            keyUp = Gdx.input.isKeyPressed(Input.Keys.UP);
+            keyDown = Gdx.input.isKeyPressed(Input.Keys.DOWN);
+        }
+
+        else if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && !jumping)
+            keyLeft = true;
+
+        else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && !jumping)
+            keyRight = true;
+
+        // Jump if NOT jumping AND NOT on ladder
+        if(Gdx.input.isKeyPressed(Input.Keys.C) && !jumping && !onLadder){
+            jumpPosition.x = position.x;
+            jumpPosition.y = position.y;
+            jumping = true;
+            velocity.y = JUMP_VELOCITY;
+
+            // If currently running, set jumpRunning to true
+            if(keyLeft || keyRight) {
+                jumpRunning = true;
+                jumpDirection = keyLeft ? -1 : 1;
+            }
+        }
+    }
+
+    private Girder getNearestGirder() {
+        for(Girder girder : Level.girders)
             if(position.x >= girder.getBeginning().x && position.x <= girder.getEnd().x)
-                if (position.y > (girder.getBeginning().y + girder.getEnd().y) / 2.0f)
+                if (position.y >= (girder.getBeginning().y + girder.getEnd().y) / 2.0f)
                     return girder;
 
-        return nearestGirder;
+        return null;
+    }
+
+    public Ladder getNearestLadder(){
+        for(Girder girder : Level.girders) {
+            for (Ladder ladder : girder.getLadders()) {
+                // Within X
+                if (position.x + (WIDTH / 2.0f ) >= ladder.getX() && position.x + (WIDTH / 2.0f ) <= ladder.getX() + ladder.TILE_WIDTH) {
+                    float midX = ladder.getX() + (Ladder.TILE_WIDTH / 2.0f);
+                    float topY = (girder.getSlope() * midX) + girder.getYIntercept();
+
+                        // TOP                                                BOTTOM
+//                    if (position.y <= topY && position.y >= topY - ladder.getHeight() - (girder.TILE_HEIGHT / 2.0f) && !ladder.isBroken())
+//                        return ladder;
+
+                    System.out.println("WITHIN ZOME X WITHZZZZZZ");
+                    if (position.y <= topY + (Girder.TILE_HEIGHT / 2.0f) && position.y >= topY - ladder.getHeight() && !ladder.isBroken())
+                    {
+                        System.out.println("FOUND A LADDER FOR YOU MAN FUK");
+                        return ladder;
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 }
