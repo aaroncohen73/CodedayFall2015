@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class Girder {
 
     private static final int TILE_WIDTH = 24;
-    private static final int TILE_HEIGHT = 8;
+    public static final int TILE_HEIGHT = 8;
 
     private static final Texture GIRDER_TILABLE = new Texture("girder.png");
 

@@ -14,8 +14,12 @@ import java.util.ArrayList;
 public class Barrel{
 
     public static final int BARREL_XVEL = 30;
-    public static final int BARREL_YVEL = 20; // Just some random value
+    public static final int BARREL_YVEL = 23; // Just some random value
     public static final int EPSILON = 3;
+
+    public static final int HEIGHT = 10;
+    public static final int SIDE_WIDTH = 12;
+    public static final int FRONT_WIDTH = 15;
 
     private static final Animation BARREL_SIDE_ANIM = AnimLoader.loadAnim("barrelSheet.png", 12, 10, 0, 4, 0.2f);
     private static final Animation BARREL_FRONT_ANIM = AnimLoader.loadAnim("barrelLadderSheet.png", 15, 10, 0, 2, 0.4f);
@@ -58,7 +62,7 @@ public class Barrel{
         if(velocity.x > 0 && position.x > currentGirder.getEnd().x)
             return true;
 
-        if(velocity.x < 0 && position.x < currentGirder.getBeginning().x)
+        if(velocity.x < 0 && (position.x + FRONT_WIDTH) < currentGirder.getBeginning().x)
             return true;
 
         return false;
@@ -128,7 +132,7 @@ public class Barrel{
 
             else{
                 position.x += velocity.x * delta;
-                position.y = (position.x * currentGirder.getSlope()) + currentGirder.getYIntercept();
+                position.y = (position.x * currentGirder.getSlope()) + currentGirder.getYIntercept() + (Girder.TILE_HEIGHT / 2.0f);
             }
         }
     }
