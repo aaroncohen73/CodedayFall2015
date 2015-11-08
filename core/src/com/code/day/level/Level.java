@@ -61,8 +61,8 @@ public class Level {
         ladders.add(Ladder.createLadder(175, girders.get(3), girders.get(4), false));//ladder from girder3 to 4
         ladders.add(Ladder.createLadder(50, girders.get(4), girders.get(5), false));//ladder from girder4 to 5
         ladders.add(Ladder.createLadder(105, girders.get(4), girders.get(5), false));//ladder from girder4 to 5
-        ladders.add(Ladder.createLadder(90, girders.get(5), girders.get(6), true));//ladder from girder5 to 6
-        ladders.add(Ladder.createLadder(185, girders.get(5), girders.get(7), false));//ladder from girder5 to 7
+        ladders.add(Ladder.createLadder(90, girders.get(5), girders.get(7), true));//ladder from girder5 to 6
+        ladders.add(Ladder.createLadder(185, girders.get(5), girders.get(6), false));//ladder from girder5 to 7
         Ladder.createLadder(79, girders.get(8), girders.get(0), false);//ladder to The_unnamed_woman lower
         Ladder.createLadder(95, girders.get(8), girders.get(0), false);//ladder to The_unnamed_woman lower
         Ladder.createLadder(143, girders.get(9), girders.get(1), false);//ladder to The_unnamed_woman lower;

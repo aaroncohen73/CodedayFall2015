@@ -78,16 +78,16 @@ public class Ladder {
 
         switch (label) {
             case 0:
-                batch.draw(LABEL_0, tilePositions[0].x - 1, (tilePositions[0].y - TILE_HEIGHT) - (height / 2));
+                batch.draw(LABEL_0, tilePositions[0].x - 1, (girder.getYPosAt(x) + nextGirder.getYPosAt(x)) / 2);
                 break;
             case 1:
-                batch.draw(LABEL_1, tilePositions[0].x - 1, (tilePositions[0].y - TILE_HEIGHT) - (height / 2));
+                batch.draw(LABEL_1, tilePositions[0].x - 1, (girder.getYPosAt(x) + nextGirder.getYPosAt(x)) / 2);
                 break;
             case 2:
-                batch.draw(LABEL_2, tilePositions[0].x - 1, (tilePositions[0].y - TILE_HEIGHT) - (height / 2));
+                batch.draw(LABEL_2, tilePositions[0].x - 1, (girder.getYPosAt(x) + nextGirder.getYPosAt(x)) / 2);
                 break;
             case 3:
-                batch.draw(LABEL_3, tilePositions[0].x - 1, (tilePositions[0].y - TILE_HEIGHT) - (height / 2));
+                batch.draw(LABEL_3, tilePositions[0].x - 1, (girder.getYPosAt(x) + nextGirder.getYPosAt(x)) / 2);
                 break;
             default:
                 break;
