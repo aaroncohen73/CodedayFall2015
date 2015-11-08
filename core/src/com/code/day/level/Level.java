@@ -36,6 +36,8 @@ public class Level {
         girders.get(5).setNextGirder(girders.get(6));
         girders.get(6).setNextGirder(girders.get(7));
 
+        Ladder.createLadder(100, girders.get(0), girders.get(2), true);
+
         barrels.add(Barrel.createBarrel(15, 160, 1, girders.get(0)));
     }
 
