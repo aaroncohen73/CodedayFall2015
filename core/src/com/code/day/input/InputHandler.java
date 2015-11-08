@@ -13,6 +13,8 @@ public class InputHandler implements InputProcessor {
     public static boolean NUM1_TRIGGERED = false;
     public static boolean NUM2_TRIGGERED = false;
     public static boolean NUM3_TRIGGERED = false;
+    public static boolean BACKSPACE_TRIGGERED = false;
+    public static boolean ESC_TRIGGERED = false;
 
     @Override
     public boolean keyDown(int keycode) {
@@ -31,6 +33,12 @@ public class InputHandler implements InputProcessor {
                 break;
             case Input.Keys.NUM_3:
                 NUM3_TRIGGERED = true;
+                break;
+            case Input.Keys.BACKSPACE:
+                BACKSPACE_TRIGGERED = true;
+                break;
+            case Input.Keys.ESCAPE:
+                ESC_TRIGGERED = true;
                 break;
         }
         return true;

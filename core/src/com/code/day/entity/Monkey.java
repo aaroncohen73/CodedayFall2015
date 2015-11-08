@@ -30,6 +30,7 @@ public class Monkey {
     private float animTimer = 0.0f;
     public Animation currentAnim = MONKEY_IDLE;
     public boolean throwMode;
+    public float barrelCooldown = 0.0f;
 
     private Girder monkeyGirder;
 
@@ -54,8 +55,16 @@ public class Monkey {
         animTimer = 0.0f;
     }
 
+    public void dropBarrel() {
+        currentAnim = MONKEY_IDLE;
+        throwMode = false;
+        animTimer = 0.0f;
+    }
+
     public void update(float delta) {
         animTimer += delta;
+        if (barrelCooldown > 0) barrelCooldown -= delta;
+        if (barrelCooldown < 0) barrelCooldown = 0;
 
         if (currentAnim == MONKEY_GRAB && currentAnim.isAnimationFinished(animTimer)) {
             throwMode = true;
@@ -63,6 +72,7 @@ public class Monkey {
 
         if (currentAnim == MONKEY_THROW && currentAnim.isAnimationFinished(animTimer)) {
             currentAnim = MONKEY_IDLE;
+            barrelCooldown = 0.6f;
         }
     }
 
