@@ -20,13 +20,13 @@ public class Barrel{
     private static final Animation BARREL_SIDE_ANIM = AnimLoader.loadAnim("barrelSheet.png", 12, 10, 0, 3, 0.1f);
     private static final Animation BARREL_FRONT_ANIM = AnimLoader.loadAnim("barrelLadderSheet.png", 15, 10, 0, 1, 0.2f);
 
-    private float animTimer = 0.0f;
+    private float animTimer;
 
-    private boolean fallMode = false;
-    private boolean beRemoved = false;
+    private boolean fallMode;
+    private boolean beRemoved;
 
-    private Vector2 position = new Vector2();
-    private Vector2 velocity = new Vector2(BARREL_XVEL, 0);
+    private Vector2 position;
+    private Vector2 velocity;
 
     private Girder currentGirder;
     private ArrayList<Integer> ladderPath;
@@ -62,7 +62,7 @@ public class Barrel{
     public boolean getFallMode(){
         return fallMode;
     }
-    
+
     public void setCurrentGirder(Girder girder) {
         currentGirder = girder;
     }
@@ -128,6 +128,22 @@ public class Barrel{
         Animation currentAnim = fallMode ? BARREL_FRONT_ANIM : BARREL_SIDE_ANIM;
 
         batch.draw(currentAnim.getKeyFrame(animTimer), position.x, position.y);
+    }
+
+    public static Barrel createBarrel(int startX, int startY, int startDir, Girder startGirder) {
+        Barrel barrel = new Barrel();
+
+        barrel.animTimer = 0.0f;
+        barrel.fallMode = true;
+        barrel.beRemoved = false;
+
+        barrel.position = new Vector2(startX, startY);
+        barrel.velocity = new Vector2(BARREL_XVEL * startDir, 0);
+
+        barrel.currentGirder = startGirder;
+        barrel.ladderPath = new ArrayList<Integer>();
+
+        return barrel;
     }
 
 }
