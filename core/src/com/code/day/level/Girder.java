@@ -107,7 +107,6 @@ public class Girder {
         girder.tilePositions = new Vector2[numTiles];
         for (int i = 0; i < numTiles; i++) {
             girder.tilePositions[i] = new Vector2(startX + (deltaX * i), startY + (deltaY * i)); //Creating individual tiles
-            System.out.println(girder.tilePositions[i]);
         }
 
         girder.ladders = new ArrayList<Ladder>();

@@ -17,12 +17,19 @@ public class Level {
         girders = new ArrayList<Girder>();
         barrels = new ArrayList<Barrel>();
 
-        girders.add(Girder.createGirder(0, 200, 200, 100, true));
-        girders.add(Girder.createGirder(0, 50, 250, 100, true));
-        girders.get(0).setNextGirder(girders.get(1));
-        girders.get(0).addLadder(Ladder.createLadder(100, girders.get(0), girders.get(1), false));
+        girders.add(Girder.createGirder (15, 160, 126, 160, true));//girder1 flat 0
+        girders.add(Girder.createGirder (135, 159, 200, 154, true));//girder1 1
+        girders.add(Girder.createGirder(31, 126, 223, 135, true));//girder2 2
+        girders.add(Girder.createGirder(15, 104, 200, 96, true));//girder3 3
+        girders.add(Girder.createGirder(31, 66, 223, 75, true));//girder4 4
+        girders.add(Girder.createGirder(15, 44, 200, 36, true));//girder5 5
+        girders.add(Girder.createGirder(7, 8, 130, 8, true));//girder6 flat 6
+        girders.add(Girder.createGirder(150, 10, 223, 14, true));//girder6 7
+        girders.add(Girder.createGirder(79, 177, 100, 177, true));//The_unnamed_woman lower 8
+        girders.add(Girder.createGirder(103, 185, 150, 185, true));//The_unnamed_woman higher 9
+        Ladder.createLadder(104, girders.get(0), girders.get(2), true);
 
-        barrels.add(Barrel.createBarrel(0, 200, 1, girders.get(0)));
+
     }
 
     public void update(float delta) {
