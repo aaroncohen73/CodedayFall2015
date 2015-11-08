@@ -23,6 +23,10 @@ public class Girder {
     private ArrayList<Ladder> ladders;
     private boolean isLast;
 
+    private Girder nextGirder = null;
+    private float slope = 0.0f;
+    private float yIntercept = 0.0f;
+
     private Girder() {} //Use factory function instead
 
     public Vector2 getBeginning() {
@@ -51,7 +55,8 @@ public class Girder {
 
     public int getYPosAt(int x) {
         for (Vector2 tilePosition : tilePositions) { //Probably a better way to do this, but meh
-            if (x > tilePosition.x && x < tilePosition.x + TILE_WIDTH) {
+            System.out.println(tilePosition);
+            if (x >= tilePosition.x && x <= tilePosition.x + TILE_WIDTH) {
                 return (int) Math.floor(tilePosition.y);
             }
         }
@@ -59,17 +64,33 @@ public class Girder {
         return -1;
     }
 
+    public void setNextGirder(Girder nextGirder) {
+        this.nextGirder = nextGirder;
+    }
+
+    public Girder getNextGirder(){
+        return nextGirder;
+    }
+
     public void addLadder(Ladder ladder) {
         ladders.add(ladder);
     }
 
-    public void draw(SpriteBatch batch) {
-        for (Vector2 tilePosition : tilePositions) {
-            batch.draw(GIRDER_TILABLE, tilePosition.x, tilePosition.y);
-        }
+    public float getSlope(){
+        return slope;
+    }
 
+    public float getYIntercept(){
+        return yIntercept;
+    }
+
+    public void draw(SpriteBatch batch) {
         for (Ladder ladder : ladders) {
             ladder.draw(batch);
+        }
+
+        for (Vector2 tilePosition : tilePositions) {
+            batch.draw(GIRDER_TILABLE, tilePosition.x, tilePosition.y);
         }
     }
 
@@ -79,17 +100,21 @@ public class Girder {
         girder.beginning = new Vector2(startX, startY);
         girder.end = new Vector2(endX, endY);
 
-        int deltaX = TILE_WIDTH * (endX > startX ? 1 : -1);
-        int deltaY = TILE_HEIGHT * (endY > startY ? 1 : -1);
-        int numTiles = (int) Math.ceil(Math.abs(endX - startX) / TILE_WIDTH);
+        int numTiles = (int) Math.round(Math.abs(endX - startX) / TILE_WIDTH) + 1;
+        float deltaX = TILE_WIDTH * (endX > startX ? 1 : -1);
+        float deltaY = (endY - startY) / numTiles;
 
         girder.tilePositions = new Vector2[numTiles];
         for (int i = 0; i < numTiles; i++) {
             girder.tilePositions[i] = new Vector2(startX + (deltaX * i), startY + (deltaY * i)); //Creating individual tiles
+            System.out.println(girder.tilePositions[i]);
         }
 
         girder.ladders = new ArrayList<Ladder>();
         girder.isLast = isLast;
+        girder.nextGirder = null;
+        girder.slope = (endY - startY) / (float)(endX - startX); // TODO: Handle divide by 0
+        girder.yIntercept = endY - (girder.slope * endX);
 
         return girder;
     }
