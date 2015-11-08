@@ -1,6 +1,7 @@
 package com.code.day.level;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -44,6 +45,12 @@ public class Ladder {
 
     public boolean isBroken() {
         return broken;
+    }
+
+    public void draw(SpriteBatch batch) {
+        for (Vector2 tilePosition : tilePositions) {
+            batch.draw(LADDER_TILABLE, tilePosition.x, tilePosition.y);
+        }
     }
 
     public static Ladder createLadder(int x, Girder beginning, Girder end, boolean broken) {
