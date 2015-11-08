@@ -16,7 +16,8 @@ public class Level {
         girders = new ArrayList<Girder>();
         barrels = new ArrayList<Barrel>();
 
-        girders.add(Girder.createGirder(0, 0, 300, 180, true));
+        girders.add(Girder.createGirder(15, 0, 126, 0, true));
+        girders.add(Girder.createGirder(127, 0, 224, 0, true));
     }
 
     public void update() {
