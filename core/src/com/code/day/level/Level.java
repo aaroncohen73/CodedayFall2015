@@ -2,13 +2,14 @@ package com.code.day.level;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.code.day.entity.Monkey;
 import com.code.day.input.InputHandler;
-import jdk.internal.util.xml.impl.Input;
 
 /**
  * Created by aaron on 11/7/15.
@@ -21,7 +22,7 @@ public class Level {
     private int throwLevel = 0;
     private Barrel nextBarrel = null;
 
-    private ArrayList<Girder> girders;
+    public static ArrayList<Girder> girders;
     private ArrayList<Ladder> ladders;
     private ArrayList<Barrel> barrels;
 
@@ -31,7 +32,7 @@ public class Level {
         girders = new ArrayList<Girder>();
         ladders = new ArrayList<Ladder>();
         barrels = new ArrayList<Barrel>();
-        
+
         girders.add(Girder.createGirder(15, 160, 126, 160, false));//girder1 flat 0
         girders.add(Girder.createGirder(135, 159, 200, 154, true));//girder1 1
         girders.add(Girder.createGirder(31, 126, 223, 135, true));//girder2 2
@@ -70,12 +71,22 @@ public class Level {
         DK.setMonkeyGirder(girders.get(0));
     }
 
+    int i = 0;
+    int j = 0;
+
     public void update(float delta) {
         DK.update(delta);
 
         for(Ladder ladder : ladders) {
             ladder.setLabel(-1);
         }
+        if(Gdx.input.isKeyPressed(Input.Keys.A))
+            i++;
+
+        if(Gdx.input.isKeyPressed(Input.Keys.B))
+            j++;
+
+        System.out.println(i + " :: " + j);
 
         if (DK.throwMode) {
             switch (throwLevel) {
