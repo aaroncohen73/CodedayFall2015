@@ -220,8 +220,6 @@ public class Level {
 
     public void draw(SpriteBatch batch) {
         batch.draw(BARREL_STACK, 10, 168);
-        DK.draw(batch);
-        jm.draw(batch);
 
         if (DK.throwMode) {
             batch.draw(Ladder.LABEL_0, 220, 170);
@@ -234,6 +232,9 @@ public class Level {
         for (Barrel barrel : barrels) {
             barrel.draw(batch);
         }
+
+        DK.draw(batch);
+        jm.draw(batch);
     }
 
 }

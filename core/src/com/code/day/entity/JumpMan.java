@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.code.day.gfx.AnimLoader;
+import com.code.day.input.InputHandler;
 import com.code.day.level.Barrel;
 import com.code.day.level.Girder;
 import com.code.day.level.Ladder;
@@ -74,8 +75,18 @@ public class JumpMan {
         updateInput();
         currentGirder = getNearestGirder();
 
-        if (keyLeft) facingRight = false;
-        if (keyRight) facingRight = true;
+        if (InputHandler.LEFT_PRESSED) facingRight = false;
+        else if (InputHandler.RIGHT_PRESSED) facingRight = true;
+
+        if (InputHandler.ALT_TRIGGERED && !jumping && !onLadder) {
+            jumpPosition = position;
+            jumping = true;
+            velocity.y = JUMP_VELOCITY;
+
+            if (InputHandler.LEFT_PRESSED || InputHandler.RIGHT_PRESSED) jumpRunning = true;
+
+            InputHandler.ALT_TRIGGERED = false;
+        }
 
         // Change x position if left/right is pressed OR they're jumping AND running
         if((keyLeft || keyRight) || jumpRunning) {
@@ -125,16 +136,28 @@ public class JumpMan {
                 position.y -= JUMP_VELOCITY;
             }
 
-            if (Math.abs(position.y - ((position.x * currentGirder.getSlope()) + currentGirder.getYIntercept() + (Girder.TILE_HEIGHT / 2.0f))) < EPSILON)
+            float midX = currentLadder.getX() + (Ladder.TILE_WIDTH / 2.0f);
+            float ladTop = ((midX * currentLadder.getGirder().getSlope()) + currentLadder.getGirder().getYIntercept());// - (Girder.TILE_HEIGHT / 2.0f));
+
+            if ((ladTop - position.y) <= 0) {
                 onLadder = false;
+                System.out.println("1 WHY DOES THIS HAVE TO HAPPEN LIKE THIS");
+            }
+
+            float ladBot = ((midX * currentLadder.getNextGirder().getSlope()) + currentLadder.getNextGirder().getYIntercept());// + (Girder.TILE_HEIGHT / 2.0f));
+
+            if ((position.y - ladBot) <= (Girder.TILE_HEIGHT / 2.0f) + (HEIGHT / 2.0f)) {
+                onLadder = false;
+                System.out.println("2ND FOR LOOP THING IF STATEMENT MANN IDK TBH");
+            }
         }
     }
 
     public void draw(SpriteBatch batch) {
         Animation currentAnim = JUMPMAN_IDLE_RIGHT;
         if (onLadder) currentAnim = JUMPMAN_CLIMB_LADDER;
-        else if (facingRight && keyRight) currentAnim = JUMPMAN_WALK_RIGHT;
-        else if (!facingRight && keyLeft) currentAnim = JUMPMAN_WALK_LEFT;
+        else if (facingRight && InputHandler.RIGHT_PRESSED) currentAnim = JUMPMAN_WALK_RIGHT;
+        else if (!facingRight && InputHandler.LEFT_PRESSED) currentAnim = JUMPMAN_WALK_LEFT;
         else if (facingRight && jumping) currentAnim = JUMPMAN_JUMP_RIGHT;
         else if (!facingRight && jumping) currentAnim = JUMPMAN_JUMP_LEFT;
         else if (facingRight) currentAnim = JUMPMAN_IDLE_RIGHT;
@@ -197,13 +220,20 @@ public class JumpMan {
         for(Girder girder : Level.girders) {
             for (Ladder ladder : girder.getLadders()) {
                 // Within X
-                if (position.x + (WIDTH / 2.0f )>= ladder.getX() && position.x + (WIDTH / 2.0f ) <= ladder.getX() + ladder.TILE_WIDTH) {
-                    float midX = (girder.getBeginning().x + girder.getEnd().x) / 2.0f;
+                if (position.x + (WIDTH / 2.0f ) >= ladder.getX() && position.x + (WIDTH / 2.0f ) <= ladder.getX() + ladder.TILE_WIDTH) {
+                    float midX = ladder.getX() + (Ladder.TILE_WIDTH / 2.0f);
                     float topY = (girder.getSlope() * midX) + girder.getYIntercept();
 
                         // TOP                                                BOTTOM
-                    if (position.y <= topY && position.y >= topY - ladder.getHeight() && !ladder.isBroken())
+//                    if (position.y <= topY && position.y >= topY - ladder.getHeight() - (girder.TILE_HEIGHT / 2.0f) && !ladder.isBroken())
+//                        return ladder;
+
+                    System.out.println("WITHIN ZOME X WITHZZZZZZ");
+                    if (position.y <= topY + (Girder.TILE_HEIGHT / 2.0f) && position.y >= topY - ladder.getHeight() && !ladder.isBroken())
+                    {
+                        System.out.println("FOUND A LADDER FOR YOU MAN FUK");
                         return ladder;
+                    }
                 }
             }
         }
