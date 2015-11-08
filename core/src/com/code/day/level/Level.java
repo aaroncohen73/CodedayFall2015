@@ -12,7 +12,6 @@ public class Level {
 
     private ArrayList<Girder> girders;
     private ArrayList<Barrel> barrels;
-    Barrel barrel;
 
     public void load() {
         girders = new ArrayList<Girder>();
@@ -22,24 +21,16 @@ public class Level {
         girders.add(Girder.createGirder(0, 50, 250, 100, true));
         girders.get(0).setNextGirder(girders.get(1));
         girders.get(0).addLadder(Ladder.createLadder(100, girders.get(0), girders.get(1), false));
-        barrel = barrel.createBarrel(0, 200, 1, girders.get(0));
-        //barrel.setPosition(new Vector2(0, 200));
-        //barrel.setCurrentGirder(girders.get(0));
-        
-//        girders.add(Girder.createGirder (15, 160, 126, 160, true));
-//        girders.add(Girder.createGirder (100, 159, 224, 157, true));
-        //girders.add(Girder.createGirder(50, 160, 200, 175, true));
-        //girders.add(Girder.createGirder(50, 130, 200, 125, true));
-        //girders.add(Girder.createGirder(50, 100, 200, 95, true));
+
+        barrels.add(Barrel.createBarrel(0, 200, 1, girders.get(0)));
     }
 
-    public void update() {
+    public void update(float delta) {
 
         // Loop through all the barrels
         for(int barrelIndex = 0; barrelIndex < barrels.size(); barrelIndex++){
             Barrel barrel = barrels.get(barrelIndex);
-
-
+            barrel.update(delta);
         }
     }
 
@@ -48,11 +39,9 @@ public class Level {
             girder.draw(batch);
         }
 
-        barrel.update(1/60.0f);
-        barrel.draw(batch);
-//        for (Barrel barrel : barrels) {
-//            barrel.draw(batch);
-//        }
+        for (Barrel barrel : barrels) {
+            barrel.draw(batch);
+        }
     }
 
 }
