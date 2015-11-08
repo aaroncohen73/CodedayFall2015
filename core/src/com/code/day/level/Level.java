@@ -12,31 +12,29 @@ public class Level {
 
     private ArrayList<Girder> girders;
     private ArrayList<Barrel> barrels;
-    Barrel barrel;
 
     public void load() {
         girders = new ArrayList<Girder>();
         barrels = new ArrayList<Barrel>();
 
-        girders.add(Girder.createGirder(0, 200, 200, 190, false));
-        girders.add(Girder.createGirder(50, 150, 230, 160, true));
-        girders.get(0).setNextGirder(girders.get(1));
-        barrel = Barrel.createBarrel(0, 200, 1, girders.get(0));
-        
-//        girders.add(Girder.createGirder (15, 160, 126, 160, true));
-//        girders.add(Girder.createGirder (100, 159, 224, 157, true));
-        //girders.add(Girder.createGirder(50, 160, 200, 175, true));
-        //girders.add(Girder.createGirder(50, 130, 200, 125, true));
-        //girders.add(Girder.createGirder(50, 100, 200, 95, true));
+        girders.add(Girder.createGirder (15, 160, 126, 160, true));//girder1 flat
+        girders.add(Girder.createGirder (135, 159, 200, 154, true));//girder1
+        girders.add(Girder.createGirder(31, 126, 223, 135, true));//girder2
+        girders.add(Girder.createGirder(15, 104, 200, 96, true));//girder3
+        girders.add(Girder.createGirder(31, 66, 223, 75, true));//girder4
+        girders.add(Girder.createGirder(15, 44, 200, 36, true));//girder5
+        girders.add(Girder.createGirder(7, 8, 130, 8, true));//girder6 flat
+        girders.add(Girder.createGirder(150, 10, 223, 14, true));//girder6
+        girders.add(Girder.createGirder(79, 177, 100, 177, true));//The_unnamed_woman lower
+        girders.add(Girder.createGirder(103, 185, 150, 185, true));//peach higher
     }
 
-    public void update() {
+    public void update(float delta) {
 
         // Loop through all the barrels
         for(int barrelIndex = 0; barrelIndex < barrels.size(); barrelIndex++){
             Barrel barrel = barrels.get(barrelIndex);
-
-
+            barrel.update(delta);
         }
     }
 
@@ -45,11 +43,9 @@ public class Level {
             girder.draw(batch);
         }
 
-        barrel.update(1/60.0f);
-        barrel.draw(batch);
-//        for (Barrel barrel : barrels) {
-//            barrel.draw(batch);
-//        }
+        for (Barrel barrel : barrels) {
+            barrel.draw(batch);
+        }
     }
 
 }

@@ -36,7 +36,7 @@ public class Barrel{
     private Girder currentGirder;
     private ArrayList<Integer> ladderPath;
 
-    public Barrel() {}
+    private Barrel() {}
 
     public Vector2 getPosition() {
         return position;
@@ -108,8 +108,9 @@ public class Barrel{
             // Loop through all the the current girders ladders
             for (Ladder ladder : currentGirder.getLadders()) {
 
+                // TODO: Uncomment the "ladderPath.contains(ladder.getUID()))"
                 // If distance between one of the ladders and the barrel position is less than some delta, set to fall mode
-                if (ladderPath.contains(ladder.getUID()) && Math.abs(position.x - ladder.getX()) < EPSILON) {
+                if (/*ladderPath.contains(ladder.getUID())) && */Math.abs(position.x - ladder.getX()) < EPSILON) {
                     fallMode = true;
                     velocity.x *= -1;
                     currentGirder = ladder.getNextGirder();
