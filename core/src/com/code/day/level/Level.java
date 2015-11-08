@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.code.day.entity.Monkey;
+import com.code.day.entity.JumpMan;
 import com.code.day.input.InputHandler;
 
 /**
@@ -19,6 +20,7 @@ public class Level {
     private static final Texture BARREL_STACK = new Texture("barrelStack.png");
 
     private Monkey DK;
+    private JumpMan jm;
     private int throwLevel = 0;
     private Barrel nextBarrel = null;
 
@@ -28,6 +30,7 @@ public class Level {
 
     public void load() {
         DK = new Monkey();
+        jm = new JumpMan(50, 50);
 
         girders = new ArrayList<Girder>();
         ladders = new ArrayList<Ladder>();
@@ -76,17 +79,11 @@ public class Level {
 
     public void update(float delta) {
         DK.update(delta);
+        jm.update(delta);
 
         for(Ladder ladder : ladders) {
             ladder.setLabel(-1);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.A))
-            i++;
-
-        if(Gdx.input.isKeyPressed(Input.Keys.B))
-            j++;
-
-        System.out.println(i + " :: " + j);
 
         if (DK.throwMode) {
             switch (throwLevel) {
@@ -224,6 +221,7 @@ public class Level {
     public void draw(SpriteBatch batch) {
         batch.draw(BARREL_STACK, 10, 168);
         DK.draw(batch);
+        jm.draw(batch);
 
         if (DK.throwMode) {
             batch.draw(Ladder.LABEL_0, 220, 170);

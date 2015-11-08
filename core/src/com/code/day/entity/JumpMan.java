@@ -2,8 +2,12 @@ package com.code.day.entity;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
+import com.code.day.gfx.AnimLoader;
 import com.code.day.level.Barrel;
 import com.code.day.level.Girder;
 import com.code.day.level.Level;
@@ -14,6 +18,17 @@ import java.util.ArrayList;
  * Created by merfoo on 11/8/15.
  */
 public class JumpMan {
+
+    private static final Animation JUMPMAN_IDLE_LEFT = AnimLoader.loadAnim("jumpManSheet.png", 16, 16, 2, 3, 0.1f);
+    private static final Animation JUMPMAN_IDLE_RIGHT = AnimLoader.loadAnim("jumpManSheet.png", 16, 16, 3, 4, 0.1f);
+    private static final Animation JUMPMAN_WALK_LEFT = AnimLoader.loadAnim("jumpManSheet.png", 16, 16, 0, 3, 0.2f);
+    private static final Animation JUMPMAN_WALK_RIGHT = AnimLoader.loadAnim("jumpManSheet.png", 16, 16, 3, 6, 0.2f);
+    private static final Animation JUMPMAN_JUMP_LEFT = AnimLoader.loadAnim("jumpManSheet.png", 16, 16, 0, 1, 0.1f);
+    private static final Animation JUMPMAN_JUMP_RIGHT = AnimLoader.loadAnim("jumpManSheet.png", 16, 16, 5, 6, 0.1f);
+    private static final Animation JUMPMAN_FACE_LADDER = AnimLoader.loadAnim("jumpManSheet.png", 16, 16, 6, 7, 0.2f);
+    private static final Animation JUMPMAN_CLIMB_LADDER = AnimLoader.loadAnim("jumpManSheet.png", 16, 16, 7, 9, 0.4f);
+    private static final Animation JUMPMAN_CLIMB_UP = AnimLoader.loadAnim("jumpManSheet.png", 16, 16, 9, 11, 0.2f);
+
     public static final float JUMP_HEIGHT = Barrel.HEIGHT + 2.0f;
     public static final float JUMP_VELOCITY = 2.5f;
     public static final float EPSILON = 2.0f;
@@ -21,6 +36,9 @@ public class JumpMan {
     private Vector2 position;
     private Vector2 velocity;
     private Vector2 jumpPosition;
+
+    private boolean facingRight = true;
+    private float animTime = 0.0f;
 
     private boolean onLadder = false;
     private boolean jumping = false;
@@ -33,8 +51,17 @@ public class JumpMan {
 
     private Girder currentGirder = null;
 
+    public JumpMan(int startX, int startY) {
+        position = new Vector2(startX, startY);
+        velocity = new Vector2(40, 0);
+    }
+
     public void update(float delta){
         updateInput();
+        currentGirder = getNearestGirder(Level.girders);
+
+        if (keyLeft) facingRight = false;
+        if (keyRight) facingRight = true;
 
         if((keyLeft || keyRight) || jumpRunning) {
             position.x += (keyLeft ? -1 : 1) * velocity.x * delta;
@@ -50,8 +77,6 @@ public class JumpMan {
 
             // If falling, check if hitting girder, stop falling
             if(velocity.y < 0) {
-                currentGirder = getNearestGirder(Level.girders);
-
                 if (Math.abs(position.y - ((position.x * currentGirder.getSlope()) + currentGirder.getYIntercept())) < EPSILON) {
                     jumping = false;
                     jumpRunning = false;
@@ -61,6 +86,19 @@ public class JumpMan {
 
             position.y += velocity.y;
         }
+    }
+
+    public void draw(SpriteBatch batch) {
+        Animation currentAnim = JUMPMAN_IDLE_RIGHT;
+        if (onLadder) currentAnim = JUMPMAN_CLIMB_LADDER;
+        else if (facingRight && keyRight) currentAnim = JUMPMAN_WALK_RIGHT;
+        else if (!facingRight && keyLeft) currentAnim = JUMPMAN_WALK_LEFT;
+        else if (facingRight && jumping) currentAnim = JUMPMAN_JUMP_RIGHT;
+        else if (!facingRight && jumping) currentAnim = JUMPMAN_JUMP_LEFT;
+        else if (facingRight) currentAnim = JUMPMAN_IDLE_RIGHT;
+        else if (!facingRight) currentAnim = JUMPMAN_IDLE_LEFT;
+
+        batch.draw(currentAnim.getKeyFrame(animTime), position.x, position.y);
     }
 
     private void updateInput(){
