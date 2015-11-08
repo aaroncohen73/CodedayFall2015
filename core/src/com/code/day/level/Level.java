@@ -12,15 +12,14 @@ public class Level {
 
     private ArrayList<Girder> girders;
     private ArrayList<Barrel> barrels;
-    Barrel barrel = new Barrel();
+    Barrel barrel;
 
     public void load() {
         girders = new ArrayList<Girder>();
         barrels = new ArrayList<Barrel>();
 
         girders.add(Girder.createGirder(0, 200, 200, 100, true));
-        barrel.setPosition(new Vector2(0, 200));
-        barrel.setCurrentGirder(girders.get(0));
+        barrel = Barrel.createBarrel(0, 200, 1, girders.get(0));
         
 //        girders.add(Girder.createGirder (15, 160, 126, 160, true));
 //        girders.add(Girder.createGirder (100, 159, 224, 157, true));

@@ -77,6 +77,8 @@ public class Barrel{
 
     public void update(float delta)
     {
+        if (beRemoved) return;
+
         // Check if the barrel is past the current girder
         if(pastCurrentGirder()) {
 
@@ -107,24 +109,26 @@ public class Barrel{
                     break;
                 }
             }
-        }
 
-        if(fallMode)
-        {
-            position.y -= BARREL_YVEL * delta;
+            if(fallMode)
+            {
+                position.y -= BARREL_YVEL * delta;
 
-            // If the y position is on the current girder line
-            if(Math.abs(position.y - ((position.x * currentGirder.getSlope()) + currentGirder.getYIntercept())) < EPSILON)
-                fallMode = false;
-        }
+                // If the y position is on the current girder line
+                if(Math.abs(position.y - ((position.x * currentGirder.getSlope()) + currentGirder.getYIntercept())) < EPSILON)
+                    fallMode = false;
+            }
 
-        else{
-            position.x += velocity.x * delta;
-            position.y = (position.x * currentGirder.getSlope()) + currentGirder.getYIntercept();
+            else{
+                position.x += velocity.x * delta;
+                position.y = (position.x * currentGirder.getSlope()) + currentGirder.getYIntercept();
+            }
         }
     }
 
     public void draw(SpriteBatch batch) {
+        if (beRemoved) return;
+
         Animation currentAnim = fallMode ? BARREL_FRONT_ANIM : BARREL_SIDE_ANIM;
 
         batch.draw(currentAnim.getKeyFrame(animTimer), position.x, position.y);
