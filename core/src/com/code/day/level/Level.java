@@ -16,10 +16,11 @@ public class Level {
         girders = new ArrayList<Girder>();
         barrels = new ArrayList<Barrel>();
 
-        girders.add(Girder.createGirder(50, 200, 200, 185, true));
-        girders.add(Girder.createGirder(50, 165, 200, 150, true));
-        girders.get(0).setNextGirder(girders.get(1));
-        Ladder.createLadder(170, girders.get(0), girders.get(1), false);
+        girders.add(Girder.createGirder (15, 160, 126, 160, true));
+        girders.add(Girder.createGirder (100, 159, 224, 157, true));
+        //girders.add(Girder.createGirder(50, 160, 200, 175, true));
+        //girders.add(Girder.createGirder(50, 130, 200, 125, true));
+        //girders.add(Girder.createGirder(50, 100, 200, 95, true));
     }
 
     public void update() {
