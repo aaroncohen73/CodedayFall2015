@@ -23,7 +23,9 @@ public class Girder {
     private ArrayList<Ladder> ladders;
     private boolean isLast;
 
-    private Girder nextGirder = null;   // TODO: Set nextGirder in the constructor
+    private Girder nextGirder = null;
+    private float slope = 0.0f;
+    private float yIntercept = 0.0f;
 
     private Girder() {} //Use factory function instead
 
@@ -69,6 +71,14 @@ public class Girder {
         return nextGirder;
     }
 
+    public float getSlope(){
+        return slope;
+    }
+
+    public float getYIntercept(){
+        return yIntercept;
+    }
+
     public void draw(SpriteBatch batch) {
         for (Vector2 tilePosition : tilePositions) {
             batch.draw(GIRDER_TILABLE, tilePosition.x, tilePosition.y);
@@ -79,7 +89,7 @@ public class Girder {
         }
     }
 
-    public static Girder createGirder(int startX, int startY, int endX, int endY, boolean isLast) {
+    public static Girder createGirder(int startX, int startY, int endX, int endY, boolean isLast, Girder nextGirder) {
         Girder girder = new Girder();
 
         girder.beginning = new Vector2(startX, startY);
@@ -96,6 +106,9 @@ public class Girder {
 
         girder.ladders = new ArrayList<Ladder>();
         girder.isLast = isLast;
+        girder.nextGirder = nextGirder;
+        girder.slope = (endY - startY) / (endX - startX); // TODO: Handle divide by 0
+        girder.yIntercept = endY - (girder.slope * endX);
 
         return girder;
     }
