@@ -20,6 +20,8 @@ import java.util.ArrayList;
  */
 public class JumpMan {
 
+    private static final int WIDTH = 16;
+    private static final int HEIGHT = 16;
     private static final Animation JUMPMAN_IDLE_LEFT = AnimLoader.loadAnim("jumpManSheet.png", 16, 16, 2, 3, 0.1f);
     private static final Animation JUMPMAN_IDLE_RIGHT = AnimLoader.loadAnim("jumpManSheet.png", 16, 16, 3, 4, 0.1f);
     private static final Animation JUMPMAN_WALK_LEFT = AnimLoader.loadAnim("jumpManSheet.png", 16, 16, 0, 3, 0.2f);
@@ -82,7 +84,6 @@ public class JumpMan {
             if(jumpRunning)
                 posXInc = jumpDirection * RUN_VELOCITY * delta;
 
-
             // Only set y position to girder y if left/right is pressed AND they're NOT jumping AND running
             if(!jumpRunning) {
                 posXInc = (keyLeft ? -1 : 1) * RUN_VELOCITY * delta;
@@ -112,9 +113,20 @@ public class JumpMan {
             position.y += velocity.y;
         }
 
-        // TODO: Finish ladder climbing logic
-        else{
+        // Change y position if they're climbing a ladder
+        if(onLadder){
+            if(keyUp){
+                currentGirder = currentLadder.getGirder();
+                position.y += JUMP_VELOCITY;
+            }
 
+            else if(keyDown){
+                currentGirder = currentLadder.getNextGirder();
+                position.y -= JUMP_VELOCITY;
+            }
+
+            if (Math.abs(position.y - ((position.x * currentGirder.getSlope()) + currentGirder.getYIntercept() + (Girder.TILE_HEIGHT / 2.0f))) < EPSILON)
+                onLadder = false;
         }
     }
 
@@ -144,15 +156,11 @@ public class JumpMan {
             if(nearestLadder != null) {
                 currentLadder = nearestLadder;
                 onLadder = true;
+                System.out.println("FOUND NEAR LADDER YOOO");
             }
 
             keyUp = Gdx.input.isKeyPressed(Input.Keys.UP);
             keyDown = Gdx.input.isKeyPressed(Input.Keys.DOWN);
-        }
-
-        // TODO: Finish ladder climbing logic
-        else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            keyDown = true;
         }
 
         else if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && !jumping)
@@ -171,7 +179,6 @@ public class JumpMan {
             // If currently running, set jumpRunning to true
             if(keyLeft || keyRight) {
                 jumpRunning = true;
-
                 jumpDirection = keyLeft ? -1 : 1;
             }
         }
@@ -189,11 +196,13 @@ public class JumpMan {
     public Ladder getNearestLadder(){
         for(Girder girder : Level.girders) {
             for (Ladder ladder : girder.getLadders()) {
-                if (position.x >= ladder.getX() && position.x <= ladder.getX() + ladder.TILE_WIDTH) {
+                // Within X
+                if (position.x + (WIDTH / 2.0f )>= ladder.getX() && position.x + (WIDTH / 2.0f ) <= ladder.getX() + ladder.TILE_WIDTH) {
                     float midX = (girder.getBeginning().x + girder.getEnd().x) / 2.0f;
                     float topY = (girder.getSlope() * midX) + girder.getYIntercept();
 
-                    if (position.y <= topY && position.y >= topY - ladder.getHeight())
+                        // TOP                                                BOTTOM
+                    if (position.y <= topY && position.y >= topY - ladder.getHeight() && !ladder.isBroken())
                         return ladder;
                 }
             }
