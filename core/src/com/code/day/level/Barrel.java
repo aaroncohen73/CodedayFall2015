@@ -44,4 +44,5 @@ public class Barrel{
     public void setCurrentGirder(Girder currentGirder) {
         this.currentGirder = currentGirder;
     }
+
 }
