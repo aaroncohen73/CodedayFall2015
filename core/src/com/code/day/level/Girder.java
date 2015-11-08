@@ -53,7 +53,8 @@ public class Girder {
 
     public int getYPosAt(int x) {
         for (Vector2 tilePosition : tilePositions) { //Probably a better way to do this, but meh
-            if (x > tilePosition.x && x < tilePosition.x + TILE_WIDTH) {
+            System.out.println(tilePosition);
+            if (x >= tilePosition.x && x <= tilePosition.x + TILE_WIDTH) {
                 return (int) Math.floor(tilePosition.y);
             }
         }
@@ -85,9 +86,9 @@ public class Girder {
         girder.beginning = new Vector2(startX, startY);
         girder.end = new Vector2(endX, endY);
 
-        int deltaX = TILE_WIDTH * (endX > startX ? 1 : -1);
-        int deltaY = TILE_HEIGHT * (endY > startY ? 1 : -1);
         int numTiles = (int) Math.ceil(Math.abs(endX - startX) / TILE_WIDTH);
+        float deltaX = TILE_WIDTH * (endX > startX ? 1 : -1);
+        float deltaY = (endY - startY) / numTiles;
 
         girder.tilePositions = new Vector2[numTiles];
         for (int i = 0; i < numTiles; i++) {

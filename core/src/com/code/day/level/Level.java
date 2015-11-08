@@ -1,14 +1,26 @@
 package com.code.day.level;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 import java.lang.Math;
+import java.util.ArrayList;
 
 /**
  * Created by aaron on 11/7/15.
  */
 public class Level {
 
-    private Girder[] girders;
-    private Barrel[] barrels;
+    private ArrayList<Girder> girders;
+    private ArrayList<Barrel> barrels;
+
+    public void load() {
+        girders = new ArrayList<Girder>();
+        barrels = new ArrayList<Barrel>();
+
+        girders.add(Girder.createGirder(50, 200, 200, 185, true));
+        girders.add(Girder.createGirder(50, 165, 200, 150, true));
+        Ladder.createLadder(170, girders.get(0), girders.get(1), false);
+    }
 
     public void update() {
 
@@ -46,6 +58,16 @@ public class Level {
                 if(Math.abs(barrel.getPosition().x - ladder.getX()) < 10) // TODO: Set this to some deltaD variable
                     barrel.setFallMode(true);
             }
+        }
+    }
+
+    public void draw(SpriteBatch batch) {
+        for (Girder girder : girders) {
+            girder.draw(batch);
+        }
+
+        for (Barrel barrel : barrels) {
+            barrel.draw(batch);
         }
     }
 
