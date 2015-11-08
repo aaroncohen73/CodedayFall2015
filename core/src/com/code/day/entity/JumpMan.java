@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.code.day.gfx.AnimLoader;
+import com.code.day.input.InputHandler;
 import com.code.day.level.Barrel;
 import com.code.day.level.Girder;
 import com.code.day.level.Level;
@@ -44,11 +45,6 @@ public class JumpMan {
     private boolean jumping = false;
     private boolean jumpRunning = false;
 
-    private boolean keyUp = false;
-    private boolean keyDown = false;
-    private boolean keyLeft = false;
-    private boolean keyRight = false;
-
     private Girder currentGirder = null;
 
     public JumpMan(int startX, int startY) {
@@ -57,14 +53,23 @@ public class JumpMan {
     }
 
     public void update(float delta){
-        updateInput();
         currentGirder = getNearestGirder(Level.girders);
 
-        if (keyLeft) facingRight = false;
-        if (keyRight) facingRight = true;
+        if (InputHandler.LEFT_PRESSED) facingRight = false;
+        else if (InputHandler.RIGHT_PRESSED) facingRight = true;
 
-        if((keyLeft || keyRight) || jumpRunning) {
-            position.x += (keyLeft ? -1 : 1) * velocity.x * delta;
+        if (InputHandler.ALT_TRIGGERED && !jumping && !onLadder) {
+            jumpPosition = position;
+            jumping = true;
+            velocity.y = JUMP_VELOCITY;
+
+            if (InputHandler.LEFT_PRESSED || InputHandler.RIGHT_PRESSED) jumpRunning = true;
+
+            InputHandler.ALT_TRIGGERED = false;
+        }
+
+        if((InputHandler.LEFT_PRESSED || InputHandler.RIGHT_PRESSED) || jumpRunning) {
+            position.x += (facingRight ? 1 : -1) * velocity.x * delta;
 
             if(!jumpRunning)
                 position.y = (position.x * currentGirder.getSlope()) + currentGirder.getYIntercept();
@@ -91,44 +96,14 @@ public class JumpMan {
     public void draw(SpriteBatch batch) {
         Animation currentAnim = JUMPMAN_IDLE_RIGHT;
         if (onLadder) currentAnim = JUMPMAN_CLIMB_LADDER;
-        else if (facingRight && keyRight) currentAnim = JUMPMAN_WALK_RIGHT;
-        else if (!facingRight && keyLeft) currentAnim = JUMPMAN_WALK_LEFT;
+        else if (facingRight && InputHandler.RIGHT_PRESSED) currentAnim = JUMPMAN_WALK_RIGHT;
+        else if (!facingRight && InputHandler.LEFT_PRESSED) currentAnim = JUMPMAN_WALK_LEFT;
         else if (facingRight && jumping) currentAnim = JUMPMAN_JUMP_RIGHT;
         else if (!facingRight && jumping) currentAnim = JUMPMAN_JUMP_LEFT;
         else if (facingRight) currentAnim = JUMPMAN_IDLE_RIGHT;
         else if (!facingRight) currentAnim = JUMPMAN_IDLE_LEFT;
 
         batch.draw(currentAnim.getKeyFrame(animTime), position.x, position.y);
-    }
-
-    private void updateInput(){
-        keyUp = false;
-        keyDown = false;
-        keyLeft = false;
-        keyRight = false;
-
-        if(Gdx.input.isKeyPressed(Input.Keys.UP))
-            keyUp = true;
-
-        else if(Gdx.input.isKeyPressed(Input.Keys.DOWN))
-            keyDown = true;
-
-        else if(Gdx.input.isKeyPressed(Input.Keys.LEFT))
-            keyLeft = true;
-
-        else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT))
-            keyRight = true;
-
-        // Jump if not jumping, not on ladder
-        else if(Gdx.input.isKeyPressed(Input.Keys.C) && !jumping && !onLadder){
-            jumpPosition = position;
-            jumping = true;
-            velocity.y = JUMP_VELOCITY;
-
-            // If currently running, set jumpRunning to true
-            if(keyLeft || keyRight)
-                jumpRunning = true;
-        }
     }
 
     private Girder getNearestGirder(ArrayList<Girder> girders) {
