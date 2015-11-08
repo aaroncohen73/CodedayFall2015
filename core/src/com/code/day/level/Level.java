@@ -16,7 +16,7 @@ public class Level {
     public void load() {
         girders = new ArrayList<Girder>();
         barrels = new ArrayList<Barrel>();
-
+        
         girders.add(Girder.createGirder (15, 160, 126, 160, false));//girder1 flat
         girders.add(Girder.createGirder (135, 159, 200, 154, true));//girder1
         girders.add(Girder.createGirder(31, 126, 223, 135, true));//girder2
@@ -36,7 +36,7 @@ public class Level {
         girders.get(5).setNextGirder(girders.get(6));
         girders.get(6).setNextGirder(girders.get(7));
 
-        Ladder.createLadder(100, girders.get(0), girders.get(2), true);
+        Ladder.createLadder(104, girders.get(0), girders.get(2), true);
         Ladder.createLadder(150, girders.get(1), girders.get(2), false);
 
         barrels.add(Barrel.createBarrel(15, 160, 1, girders.get(0)));
