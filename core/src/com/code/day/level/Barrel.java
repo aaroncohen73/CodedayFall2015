@@ -90,7 +90,7 @@ public class Barrel{
         if(pastCurrentGirder()) {
 
             // If the current girder is the last in the current layer, set barrel to fall mode
-            if (!currentGirder.isLast()) {
+            if (currentGirder.isLast()) {
                 fallMode = true;  // Says to only update the y position
                 velocity.x *= -1;
             }
