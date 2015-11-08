@@ -14,10 +14,13 @@ public class Ladder {
 
     private static final Texture LADDER_TILABLE = new Texture("ladder.png");
 
+    private static int currentUID = 0;
+
     private int x;
     private int height;
     private Vector2[] tilePositions;
 
+    private int uid;
     private Girder girder, nextGirder;
     private boolean broken;
 
@@ -33,6 +36,10 @@ public class Ladder {
 
     public Vector2[] getTilePositions() {
         return tilePositions;
+    }
+
+    public int getUID() {
+        return uid;
     }
 
     public Girder getGirder() {
@@ -59,7 +66,7 @@ public class Ladder {
         ladder.x = x;
 
         int beginY = beginning.getYPosAt(x);
-        int endY = beginning.getYPosAt(x);
+        int endY = end.getYPosAt(x);
 
         if (broken) {
             ladder.tilePositions = new Vector2[] {
@@ -69,14 +76,17 @@ public class Ladder {
         } else {
             int numTiles = (int) Math.ceil((beginY - endY) / TILE_HEIGHT);
             ladder.tilePositions = new Vector2[numTiles];
-            for (int i = 1; i < numTiles; i++) {
+            for (int i = 1; i < numTiles + 1; i++) {
                 ladder.tilePositions[i - 1] = new Vector2(x, beginY - (TILE_HEIGHT * i));
             }
         }
 
+        ladder.uid = currentUID++;
         ladder.girder = beginning;
         ladder.nextGirder = end;
         ladder.broken = broken;
+
+        beginning.addLadder(ladder);
 
         return ladder;
     }
