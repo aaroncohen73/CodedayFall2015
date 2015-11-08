@@ -5,6 +5,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.code.day.gfx.AnimLoader;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 /**
  * Created by aaron on 11/7/15.
  */
@@ -26,6 +29,7 @@ public class Barrel{
     private Vector2 velocity = new Vector2(BARREL_XVEL, 0);
 
     private Girder currentGirder;
+    private ArrayList<Integer> ladderPath;
 
     public Barrel() {}
 
@@ -58,9 +62,17 @@ public class Barrel{
     public boolean getFallMode(){
         return fallMode;
     }
-
-    public void setCurrentGirder(Girder girder){
+    
+    public void setCurrentGirder(Girder girder) {
         currentGirder = girder;
+    }
+
+    public void addLadder(int uid) {
+        ladderPath.add(uid);
+    }
+
+    public ArrayList<Integer> getLadderPath() {
+        return ladderPath;
     }
 
     public void update(float delta)
@@ -88,7 +100,7 @@ public class Barrel{
             for (Ladder ladder : currentGirder.getLadders()) {
 
                 // If distance between one of the ladders and the barrel position is less than some delta, set to fall mode
-                if (Math.abs(position.x - ladder.getX()) < EPSILON) {
+                if (ladderPath.contains(ladder.getUID()) && Math.abs(position.x - ladder.getX()) < EPSILON) {
                     fallMode = true;
                     velocity.x *= -1;
                     currentGirder = ladder.getNextGirder();
