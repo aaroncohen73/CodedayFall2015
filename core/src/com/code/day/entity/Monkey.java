@@ -29,6 +29,7 @@ public class Monkey {
 
     private Girder monkeyGirder;
     private float barrelCooldown = 0.0f;
+    private boolean attacked = false;
     public Barrel toThrow = null;
 
     public void setMonkeyGirder(Girder girder) {
@@ -51,7 +52,12 @@ public class Monkey {
         animTimer += delta;
         if (currentAnim == MONKEY_ATTACK && currentAnim.isAnimationFinished(animTimer)) {
             currentAnim = MONKEY_IDLE;
+            attacked = false;
+        }
+
+        if (currentAnim == MONKEY_ATTACK && animTimer > 1.1 && !attacked) {
             toThrow = Barrel.createBarrel(MONKEY_XPOS + 45, MONKEY_YPOS, 1, monkeyGirder);
+            attacked = true;
         }
 
         if (barrelCooldown > 0) {
