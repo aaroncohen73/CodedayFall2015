@@ -100,13 +100,14 @@ public class Girder {
         girder.beginning = new Vector2(startX, startY);
         girder.end = new Vector2(endX, endY);
 
-        int numTiles = (int) Math.ceil(Math.abs(endX - startX) / TILE_WIDTH);
+        int numTiles = (int) Math.round(Math.abs(endX - startX) / TILE_WIDTH) + 1;
         float deltaX = TILE_WIDTH * (endX > startX ? 1 : -1);
         float deltaY = (endY - startY) / numTiles;
 
         girder.tilePositions = new Vector2[numTiles];
         for (int i = 0; i < numTiles; i++) {
             girder.tilePositions[i] = new Vector2(startX + (deltaX * i), startY + (deltaY * i)); //Creating individual tiles
+            System.out.println(girder.tilePositions[i]);
         }
 
         girder.ladders = new ArrayList<Ladder>();

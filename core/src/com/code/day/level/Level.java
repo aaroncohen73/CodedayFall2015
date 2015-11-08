@@ -21,6 +21,12 @@ public class Level {
         girders.add(Girder.createGirder(0, 200, 200, 100, true));
         barrel.setPosition(new Vector2(0, 200));
         barrel.setCurrentGirder(girders.get(0));
+        
+//        girders.add(Girder.createGirder (15, 160, 126, 160, true));
+//        girders.add(Girder.createGirder (100, 159, 224, 157, true));
+        //girders.add(Girder.createGirder(50, 160, 200, 175, true));
+        //girders.add(Girder.createGirder(50, 130, 200, 125, true));
+        //girders.add(Girder.createGirder(50, 100, 200, 95, true));
     }
 
     public void update() {
