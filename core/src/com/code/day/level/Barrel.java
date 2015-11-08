@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class Barrel{
 
     public static final int BARREL_XVEL = 30;
-    public static final int BARREL_YVEL = 20; // Just some random value
+    public static final int BARREL_YVEL = 23; // Just some random value
     public static final int EPSILON = 3;
 
     public static final int HEIGHT = 10;
