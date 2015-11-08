@@ -16,12 +16,37 @@ public class Girder {
     private static final Texture GIRDER_TILABLE = new Texture("girder.png");
 
     private Vector2 beginning, end;
+
     private Vector2[] tilePositions;
 
     private ArrayList<Ladder> ladders;
     private boolean isLast;
 
     private Girder() {} //Use factory function instead
+
+    public Vector2 getBeginning() {
+        return beginning;
+    }
+
+    public Vector2 getEnd() {
+        return end;
+    }
+
+    public Vector2[] getTilePositions() {
+        return tilePositions;
+    }
+
+    public ArrayList<Ladder> getLadders() {
+        return ladders;
+    }
+
+    public boolean isLast() {
+        return isLast;
+    }
+
+    public void setLast(boolean isLast) {
+        this.isLast = isLast;
+    }
 
     /**
      * Get the y position of the top of the girder at a given x value
