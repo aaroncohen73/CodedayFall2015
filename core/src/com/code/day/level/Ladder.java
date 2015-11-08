@@ -22,6 +22,30 @@ public class Ladder {
 
     private Ladder() {} //Use factory function instead
 
+    public int getX() {
+        return x;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public Vector2[] getTilePositions() {
+        return tilePositions;
+    }
+
+    public Girder getGirder() {
+        return girder;
+    }
+
+    public Girder getNextGirder() {
+        return nextGirder;
+    }
+
+    public boolean isBroken() {
+        return broken;
+    }
+
     public static Ladder createLadder(int x, Girder beginning, Girder end, boolean broken) {
         Ladder ladder = new Ladder();
 
