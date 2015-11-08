@@ -3,6 +3,7 @@ package com.code.day.level;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.code.day.Sfx;
 import com.code.day.gfx.AnimLoader;
 
 import java.lang.reflect.Array;
@@ -13,8 +14,8 @@ import java.util.ArrayList;
  */
 public class Barrel{
 
-    public static final int BARREL_XVEL = 30;
-    public static final int BARREL_YVEL = 23; // Just some random value
+    public static final int BARREL_XVEL = 40;
+    public static final int BARREL_YVEL = 28; // Just some random value
     public static final int EPSILON = 3;
 
     public static final int HEIGHT = 10;
@@ -127,8 +128,10 @@ public class Barrel{
                 position.y -= BARREL_YVEL * delta;
 
                 // If the y position is on the current girder line
-                if(Math.abs(position.y - ((position.x * currentGirder.getSlope()) + currentGirder.getYIntercept())) < EPSILON)
+                if(Math.abs(position.y - ((position.x * currentGirder.getSlope()) + currentGirder.getYIntercept())) < EPSILON) {
                     fallMode = false;
+                    Sfx.playSound("barrel_fall", 0.6f);
+                }
             }
 
             else{

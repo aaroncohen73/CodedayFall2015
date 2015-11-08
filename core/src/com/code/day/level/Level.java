@@ -188,7 +188,7 @@ public class Level {
                 InputHandler.ESC_TRIGGERED = false;
             }
         } else {
-            if (InputHandler.SPACE_TRIGGERED) {
+            if (InputHandler.SPACE_TRIGGERED && DK.barrelCooldown == 0) {
                 DK.grabBarrel();
                 nextBarrel = Barrel.createBarrel(Monkey.MONKEY_XPOS + 45, Monkey.MONKEY_YPOS, 1, DK.getMonkeyGirder());
                 throwLevel = 1;
