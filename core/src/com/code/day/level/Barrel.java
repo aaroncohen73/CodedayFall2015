@@ -14,8 +14,8 @@ public class Barrel{
     public static final int BARREL_YVEL = 20; // Just some random value
     public static final int EPSILON = 10;
 
-    private static final Animation BARREL_SIDE_ANIM = AnimLoader.loadAnim("barrelSheet.png", 16, 16, 0, 7, 0.1f);
-    private static final Animation BARREL_FRONT_ANIM = AnimLoader.loadAnim("barrelLadderSheet.png", 16, 16, 0, 1, 0.2f);
+    private static final Animation BARREL_SIDE_ANIM = AnimLoader.loadAnim("barrelSheet.png", 12, 10, 0, 3, 0.1f);
+    private static final Animation BARREL_FRONT_ANIM = AnimLoader.loadAnim("barrelLadderSheet.png", 15, 10, 0, 1, 0.2f);
 
     private float animTimer = 0.0f;
 
