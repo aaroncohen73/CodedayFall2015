@@ -3,9 +3,12 @@ package com.code.day.level;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.code.day.entity.Monkey;
+import com.code.day.input.InputHandler;
+import jdk.internal.util.xml.impl.Input;
 
 /**
  * Created by aaron on 11/7/15.
@@ -18,6 +21,8 @@ public class Level {
 
     private ArrayList<Girder> girders;
     private ArrayList<Barrel> barrels;
+
+    private boolean throwMode;
 
     public void load() {
         DK = new Monkey();
@@ -48,14 +53,22 @@ public class Level {
         Ladder.createLadder(150, girders.get(1), girders.get(2), false);
 
         DK.setMonkeyGirder(girders.get(0));
-        DK.throwBarrel();
     }
 
     public void update(float delta) {
         DK.update(delta);
-        if (DK.toThrow != null) {
-            barrels.add(DK.toThrow);
-            DK.toThrow = null;
+
+        if (DK.throwMode) {
+            if (InputHandler.SPACE_TRIGGERED) {
+                DK.throwBarrel();
+                barrels.add(Barrel.createBarrel(Monkey.MONKEY_XPOS + 45, Monkey.MONKEY_YPOS, 1, DK.getMonkeyGirder()));
+                InputHandler.SPACE_TRIGGERED = false;
+            }
+        } else {
+            if (InputHandler.SPACE_TRIGGERED) {
+                DK.grabBarrel();
+                InputHandler.SPACE_TRIGGERED = false;
+            }
         }
 
         // Loop through all the barrels

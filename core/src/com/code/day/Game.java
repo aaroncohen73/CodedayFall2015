@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.code.day.input.InputHandler;
 
 public class Game extends ApplicationAdapter {
 
@@ -14,6 +15,7 @@ public class Game extends ApplicationAdapter {
 	public void create () {
 		gameScreen = new GameScreen();
 
+        Gdx.input.setInputProcessor(new InputHandler());
         Gdx.graphics.getDeltaTime(); //Reset timer
 	}
 
