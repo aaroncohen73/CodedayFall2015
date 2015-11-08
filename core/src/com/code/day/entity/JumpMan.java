@@ -144,9 +144,9 @@ public class JumpMan {
                 System.out.println("1 WHY DOES THIS HAVE TO HAPPEN LIKE THIS");
             }
 
-            float ladBot = ((midX * currentLadder.getNextGirder().getSlope()) + currentLadder.getNextGirder().getYIntercept());// + (Girder.TILE_HEIGHT / 2.0f));
-
-            if ((position.y - ladBot) <= (Girder.TILE_HEIGHT / 2.0f) + (HEIGHT / 2.0f)) {
+            float ladBot = ((midX * currentLadder.getNextGirder().getSlope()) + currentLadder.getNextGirder().getYIntercept() + Girder.TILE_HEIGHT + HEIGHT + 500);
+            System.out.println("POsition - ladBot : " + (position.y) + " :: " + (ladBot));
+            if ((position.y - ladBot) <= 0) {
                 onLadder = false;
                 System.out.println("2ND FOR LOOP THING IF STATEMENT MANN IDK TBH");
             }
@@ -172,24 +172,24 @@ public class JumpMan {
         keyLeft = false;
         keyRight = false;
 
+        keyUp = Gdx.input.isKeyPressed(Input.Keys.UP);
+        keyDown = Gdx.input.isKeyPressed(Input.Keys.DOWN);
+
         // TODO: Finish ladder climbing logic
-        if(Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+        if(!jumping && !onLadder && (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.DOWN))) {
             Ladder nearestLadder = getNearestLadder();//currentGirder);
 
-            if(nearestLadder != null) {
+            if (nearestLadder != null) {
                 currentLadder = nearestLadder;
                 onLadder = true;
                 System.out.println("FOUND NEAR LADDER YOOO");
             }
-
-            keyUp = Gdx.input.isKeyPressed(Input.Keys.UP);
-            keyDown = Gdx.input.isKeyPressed(Input.Keys.DOWN);
         }
 
-        else if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && !jumping)
+        else if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && !jumping && !onLadder)
             keyLeft = true;
 
-        else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && !jumping)
+        else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && !jumping && !onLadder)
             keyRight = true;
 
         // Jump if NOT jumping AND NOT on ladder
@@ -222,14 +222,11 @@ public class JumpMan {
                 // Within X
                 if (position.x + (WIDTH / 2.0f ) >= ladder.getX() && position.x + (WIDTH / 2.0f ) <= ladder.getX() + ladder.TILE_WIDTH) {
                     float midX = ladder.getX() + (Ladder.TILE_WIDTH / 2.0f);
-                    float topY = (girder.getSlope() * midX) + girder.getYIntercept();
+                    float topY = (girder.getSlope() * midX) + girder.getYIntercept() + (Girder.TILE_HEIGHT / 2.0f) + EPSILON;
+                    float botY = (midX * ladder.getNextGirder().getSlope()) + ladder.getNextGirder().getYIntercept() + (Girder.TILE_HEIGHT / 2.0f) - EPSILON;
 
-                        // TOP                                                BOTTOM
-//                    if (position.y <= topY && position.y >= topY - ladder.getHeight() - (girder.TILE_HEIGHT / 2.0f) && !ladder.isBroken())
-//                        return ladder;
-
-                    System.out.println("WITHIN ZOME X WITHZZZZZZ");
-                    if (position.y <= topY + (Girder.TILE_HEIGHT / 2.0f) && position.y >= topY - ladder.getHeight() && !ladder.isBroken())
+                    // Within Y
+                    if (position.y - EPSILON <= topY && position.y >= botY && !ladder.isBroken())
                     {
                         System.out.println("FOUND A LADDER FOR YOU MAN FUK");
                         return ladder;
