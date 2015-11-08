@@ -14,10 +14,13 @@ public class Ladder {
 
     private static final Texture LADDER_TILABLE = new Texture("ladder.png");
 
+    private static int currentUID = 0;
+
     private int x;
     private int height;
     private Vector2[] tilePositions;
 
+    private int uid;
     private Girder girder, nextGirder;
     private boolean broken;
 
@@ -33,6 +36,10 @@ public class Ladder {
 
     public Vector2[] getTilePositions() {
         return tilePositions;
+    }
+
+    public int getUID() {
+        return uid;
     }
 
     public Girder getGirder() {
@@ -74,6 +81,7 @@ public class Ladder {
             }
         }
 
+        ladder.uid = currentUID++;
         ladder.girder = beginning;
         ladder.nextGirder = end;
         ladder.broken = broken;

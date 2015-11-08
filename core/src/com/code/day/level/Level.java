@@ -3,6 +3,7 @@ package com.code.day.level;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 
 /**
  * Created by aaron on 11/7/15.
@@ -15,7 +16,7 @@ public class Level {
     public void load() {
         girders = new ArrayList<Girder>();
         barrels = new ArrayList<Barrel>();
-
+        
         girders.add(Girder.createGirder (15, 160, 126, 160, true));//girder1 flat
         girders.add(Girder.createGirder (135, 159, 200, 154, true));//girder1
         girders.add(Girder.createGirder(31, 126, 223, 135, true));//girder2
@@ -28,13 +29,12 @@ public class Level {
         girders.add(Girder.createGirder(103, 185, 150, 185, true));//peach higher
     }
 
-    public void update() {
+    public void update(float delta) {
 
         // Loop through all the barrels
         for(int barrelIndex = 0; barrelIndex < barrels.size(); barrelIndex++){
             Barrel barrel = barrels.get(barrelIndex);
-
-
+            barrel.update(delta);
         }
     }
 

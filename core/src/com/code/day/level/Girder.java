@@ -113,7 +113,7 @@ public class Girder {
         girder.ladders = new ArrayList<Ladder>();
         girder.isLast = isLast;
         girder.nextGirder = null;
-        girder.slope = (endY - startY) / (endX - startX); // TODO: Handle divide by 0
+        girder.slope = (endY - startY) / (float)(endX - startX); // TODO: Handle divide by 0
         girder.yIntercept = endY - (girder.slope * endX);
 
         return girder;

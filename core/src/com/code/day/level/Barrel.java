@@ -5,6 +5,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.code.day.gfx.AnimLoader;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 /**
  * Created by aaron on 11/7/15.
  */
@@ -14,18 +17,24 @@ public class Barrel{
     public static final int BARREL_YVEL = 20; // Just some random value
     public static final int EPSILON = 10;
 
-    private static final Animation BARREL_SIDE_ANIM = AnimLoader.loadAnim("barrelSheet.png", 12, 10, 0, 3, 0.1f);
-    private static final Animation BARREL_FRONT_ANIM = AnimLoader.loadAnim("barrelLadderSheet.png", 15, 10, 0, 1, 0.2f);
+    private static final Animation BARREL_SIDE_ANIM = AnimLoader.loadAnim("barrelSheet.png", 12, 10, 0, 3, 0.2f);
+    private static final Animation BARREL_FRONT_ANIM = AnimLoader.loadAnim("barrelLadderSheet.png", 15, 10, 0, 1, 0.4f);
 
-    private float animTimer = 0.0f;
+    static {
+        BARREL_FRONT_ANIM.setPlayMode(Animation.PlayMode.LOOP);
+        BARREL_SIDE_ANIM.setPlayMode(Animation.PlayMode.LOOP);
+    }
 
-    private boolean fallMode = false;
-    private boolean beRemoved = false;
+    private float animTimer;
 
-    private Vector2 position = new Vector2();
-    private Vector2 velocity = new Vector2(BARREL_XVEL, 0);
+    private boolean fallMode;
+    private boolean beRemoved;
+
+    private Vector2 position;
+    private Vector2 velocity;
 
     private Girder currentGirder;
+    private ArrayList<Integer> ladderPath;
 
     private Barrel() {}
 
@@ -59,8 +68,24 @@ public class Barrel{
         return fallMode;
     }
 
+    public void setCurrentGirder(Girder girder) {
+        currentGirder = girder;
+    }
+
+    public void addLadder(int uid) {
+        ladderPath.add(uid);
+    }
+
+    public ArrayList<Integer> getLadderPath() {
+        return ladderPath;
+    }
+
     public void update(float delta)
     {
+        if (beRemoved) return;
+
+        animTimer += delta;
+
         // Check if the barrel is past the current girder
         if(pastCurrentGirder()) {
 
@@ -83,35 +108,53 @@ public class Barrel{
             // Loop through all the the current girders ladders
             for (Ladder ladder : currentGirder.getLadders()) {
 
+                // TODO: Uncomment the "ladderPath.contains(ladder.getUID()))"
                 // If distance between one of the ladders and the barrel position is less than some delta, set to fall mode
-                if (Math.abs(position.x - ladder.getX()) < EPSILON) {
+                if (/*ladderPath.contains(ladder.getUID())) && */Math.abs(position.x - ladder.getX()) < EPSILON) {
                     fallMode = true;
                     velocity.x *= -1;
                     currentGirder = ladder.getNextGirder();
                     break;
                 }
             }
-        }
 
-        if(fallMode)
-        {
-            position.y -= BARREL_YVEL * delta;
+            if(fallMode)
+            {
+                position.y -= BARREL_YVEL * delta;
 
-            // If the y position is on the current girder line
-            if(Math.abs(position.y - ((position.x * currentGirder.getSlope()) + currentGirder.getYIntercept())) < EPSILON)
-                fallMode = false;
-        }
+                // If the y position is on the current girder line
+                if(Math.abs(position.y - ((position.x * currentGirder.getSlope()) + currentGirder.getYIntercept())) < EPSILON)
+                    fallMode = false;
+            }
 
-        else{
-            position.x += velocity.x * delta;
-            position.y -= Math.abs(position.x * currentGirder.getSlope()) * delta;
+            else{
+                position.x += velocity.x * delta;
+                position.y = (position.x * currentGirder.getSlope()) + currentGirder.getYIntercept();
+            }
         }
     }
 
     public void draw(SpriteBatch batch) {
-        Animation currentAnim = fallMode ? BARREL_FRONT_ANIM : BARREL_SIDE_ANIM;
+        if (beRemoved) return;
 
+        Animation currentAnim = fallMode ? BARREL_FRONT_ANIM : BARREL_SIDE_ANIM;
         batch.draw(currentAnim.getKeyFrame(animTimer), position.x, position.y);
+    }
+
+    public static Barrel createBarrel(int startX, int startY, int startDir, Girder startGirder) {
+        Barrel barrel = new Barrel();
+
+        barrel.animTimer = 0.0f;
+        barrel.fallMode = true;
+        barrel.beRemoved = false;
+
+        barrel.position = new Vector2(startX, startY);
+        barrel.velocity = new Vector2(BARREL_XVEL * startDir, 0);
+
+        barrel.currentGirder = startGirder;
+        barrel.ladderPath = new ArrayList<Integer>();
+
+        return barrel;
     }
 
 }
