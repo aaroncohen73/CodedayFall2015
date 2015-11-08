@@ -27,7 +27,7 @@ public class Barrel{
 
     private Girder currentGirder;
 
-    private Barrel() {}
+    public Barrel() {}
 
     public Vector2 getPosition() {
         return position;
@@ -57,6 +57,10 @@ public class Barrel{
 
     public boolean getFallMode(){
         return fallMode;
+    }
+
+    public void setCurrentGirder(Girder girder){
+        currentGirder = girder;
     }
 
     public void update(float delta)
@@ -104,7 +108,7 @@ public class Barrel{
 
         else{
             position.x += velocity.x * delta;
-            position.y -= Math.abs(position.x * currentGirder.getSlope()) * delta;
+            position.y = (position.x * currentGirder.getSlope()) + currentGirder.getYIntercept();
         }
     }
 
