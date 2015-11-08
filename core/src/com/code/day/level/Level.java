@@ -2,21 +2,29 @@ package com.code.day.level;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.code.day.entity.Monkey;
 
 /**
  * Created by aaron on 11/7/15.
  */
 public class Level {
 
+    private static final Texture BARREL_STACK = new Texture("barrelStack.png");
+
+    private Monkey DK;
+
     private ArrayList<Girder> girders;
     private ArrayList<Barrel> barrels;
 
     public void load() {
+        DK = new Monkey();
+
         girders = new ArrayList<Girder>();
         barrels = new ArrayList<Barrel>();
-
+        
         girders.add(Girder.createGirder(15, 160, 126, 160, true));//girder1 flat 0
         girders.add(Girder.createGirder(135, 159, 200, 154, true));//girder1 1
         girders.add(Girder.createGirder(31, 126, 223, 135, true));//girder2 2
@@ -41,19 +49,31 @@ public class Level {
         Ladder.createLadder(185, girders.get(5), girders.get(7), false);//ladder from girder5 to 7
         Ladder.createLadder(79, girders.get(8), girders.get(0), false);//ladder to The_unnamed_woman lower
         Ladder.createLadder(95, girders.get(8), girders.get(0), false);//ladder to The_unnamed_woman lower
-        Ladder.createLadder(143, girders.get(9), girders.get(1), false);//ladder to The_unnamed_woman lower
+        Ladder.createLadder(143, girders.get(9), girders.get(1), false);//ladder to The_unnamed_woman lower;
+
+        DK.setMonkeyGirder(girders.get(0));
+        DK.throwBarrel();
     }
 
     public void update(float delta) {
+        DK.update(delta);
+        if (DK.toThrow != null) {
+            barrels.add(DK.toThrow);
+            DK.toThrow = null;
+        }
 
         // Loop through all the barrels
         for(int barrelIndex = 0; barrelIndex < barrels.size(); barrelIndex++){
             Barrel barrel = barrels.get(barrelIndex);
             barrel.update(delta);
+            if (barrel.getBeRemoved()) barrels.remove(barrel);
         }
     }
 
     public void draw(SpriteBatch batch) {
+        batch.draw(BARREL_STACK, 10, 168);
+        DK.draw(batch);
+
         for (Girder girder : girders) {
             girder.draw(batch);
         }
