@@ -78,16 +78,16 @@ public class Ladder {
 
         switch (label) {
             case 0:
-                batch.draw(LABEL_0, tilePositions[0].x - 1, tilePositions[0].y - 5);
+                batch.draw(LABEL_0, tilePositions[0].x - 1, (tilePositions[0].y - TILE_HEIGHT) - (height / 2));
                 break;
             case 1:
-                batch.draw(LABEL_1, tilePositions[0].x - 1, tilePositions[0].y - 5);
+                batch.draw(LABEL_1, tilePositions[0].x - 1, (tilePositions[0].y - TILE_HEIGHT) - (height / 2));
                 break;
             case 2:
-                batch.draw(LABEL_2, tilePositions[0].x - 1, tilePositions[0].y - 5);
+                batch.draw(LABEL_2, tilePositions[0].x - 1, (tilePositions[0].y - TILE_HEIGHT) - (height / 2));
                 break;
             case 3:
-                batch.draw(LABEL_3, tilePositions[0].x - 1, tilePositions[0].y - 5);
+                batch.draw(LABEL_3, tilePositions[0].x - 1, (tilePositions[0].y - TILE_HEIGHT) - (height / 2));
                 break;
             default:
                 break;
@@ -101,6 +101,7 @@ public class Ladder {
 
         int beginY = beginning.getYPosAt(x);
         int endY = end.getYPosAt(x);
+        ladder.height = beginY - endY;
 
         if (broken) {
             ladder.tilePositions = new Vector2[] {
@@ -110,8 +111,8 @@ public class Ladder {
         } else {
             int numTiles = (int) Math.ceil((beginY - endY) / TILE_HEIGHT);
             ladder.tilePositions = new Vector2[numTiles];
-            for (int i = 1; i < numTiles + 1; i++) {
-                ladder.tilePositions[i - 1] = new Vector2(x, beginY - (TILE_HEIGHT * i));
+            for (int i = 0; i < numTiles; i++) {
+                ladder.tilePositions[i] = new Vector2(x, beginY - (TILE_HEIGHT * i));
             }
         }
 

@@ -55,7 +55,6 @@ public class Girder {
 
     public int getYPosAt(int x) {
         for (Vector2 tilePosition : tilePositions) { //Probably a better way to do this, but meh
-            System.out.println(tilePosition);
             if (x >= tilePosition.x && x <= tilePosition.x + TILE_WIDTH) {
                 return (int) Math.floor(tilePosition.y);
             }
