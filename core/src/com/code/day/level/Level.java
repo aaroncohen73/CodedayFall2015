@@ -28,7 +28,6 @@ public class Level {
         girders.add(Girder.createGirder(79, 177, 100, 177, true));//The_unnamed_woman lower 8
         girders.add(Girder.createGirder(103, 185, 150, 185, true));//The_unnamed_woman higher 9
         Ladder.createLadder(104, girders.get(0), girders.get(2), true);
-
     }
 
     public void update(float delta) {

@@ -71,7 +71,7 @@ public class Ladder {
         if (broken) {
             ladder.tilePositions = new Vector2[] {
                     new Vector2(x, beginY - TILE_HEIGHT),
-                    new Vector2(x, endY)
+                    new Vector2(x, endY + (TILE_HEIGHT * 1.5f))
             };
         } else {
             int numTiles = (int) Math.ceil((beginY - endY) / TILE_HEIGHT);
