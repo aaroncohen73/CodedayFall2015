@@ -112,7 +112,6 @@ public class Barrel{
             // Loop through all the the current girders ladders
             for (Ladder ladder : currentGirder.getLadders()) {
 
-                // TODO: Uncomment the "ladderPath.contains(ladder.getUID()))"
                 // If distance between one of the ladders and the barrel position is less than some delta, set to fall mode
                 if (ladderPath.contains(ladder.getUID()) && Math.abs(position.x - ladder.getX()) < EPSILON) {
                     fallMode = true;
