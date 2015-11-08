@@ -10,6 +10,7 @@ public class DesktopLauncher {
 		config.width = 512;
 		config.height = 448;
 		config.resizable = false;
+		config.title = "Please don't sue us Nintendo";
 		new LwjglApplication(new Game(), config);
 	}
 }

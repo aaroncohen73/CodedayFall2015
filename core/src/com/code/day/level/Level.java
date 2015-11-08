@@ -91,6 +91,8 @@ public class Level {
                         nextBarrel.addLadder(ladders.get(1).getUID());
                         throwLevel += 1;
                         InputHandler.NUM2_TRIGGERED = false;
+                    } else if (InputHandler.NUM3_TRIGGERED) {
+                        InputHandler.NUM3_TRIGGERED = false;
                     }
                     break;
                 case 2:
@@ -143,6 +145,8 @@ public class Level {
                         nextBarrel.addLadder(ladders.get(9).getUID());
                         throwLevel += 1;
                         InputHandler.NUM2_TRIGGERED = false;
+                    } else if (InputHandler.NUM3_TRIGGERED) {
+                        InputHandler.NUM3_TRIGGERED = false;
                     }
                     break;
                 case 5:
@@ -157,6 +161,8 @@ public class Level {
                         nextBarrel.addLadder(ladders.get(11).getUID());
                         throwLevel += 1;
                         InputHandler.NUM2_TRIGGERED = false;
+                    } else if (InputHandler.NUM3_TRIGGERED) {
+                        InputHandler.NUM3_TRIGGERED = false;
                     }
                     break;
             }
@@ -167,9 +173,19 @@ public class Level {
                 throwLevel = 0;
                 InputHandler.SPACE_TRIGGERED = false;
             } else if (InputHandler.NUM0_TRIGGERED) {
+                nextBarrel.addLadder(-1);
                 throwLevel += 1;
                 if (throwLevel > 5) InputHandler.SPACE_TRIGGERED = true;
                 InputHandler.NUM0_TRIGGERED = false;
+            } else if (InputHandler.BACKSPACE_TRIGGERED) {
+                throwLevel -= 1;
+                if (throwLevel < 1) throwLevel = 1;
+                else nextBarrel.getLadderPath().remove(nextBarrel.getLadderPath().size() - 1);
+                InputHandler.BACKSPACE_TRIGGERED = false;
+            } else if (InputHandler.ESC_TRIGGERED) {
+                DK.dropBarrel();
+                nextBarrel = null;
+                InputHandler.ESC_TRIGGERED = false;
             }
         } else {
             if (InputHandler.SPACE_TRIGGERED) {
@@ -177,6 +193,12 @@ public class Level {
                 nextBarrel = Barrel.createBarrel(Monkey.MONKEY_XPOS + 45, Monkey.MONKEY_YPOS, 1, DK.getMonkeyGirder());
                 throwLevel = 1;
                 InputHandler.SPACE_TRIGGERED = false;
+                InputHandler.NUM0_TRIGGERED = false;
+                InputHandler.NUM1_TRIGGERED = false;
+                InputHandler.NUM2_TRIGGERED = false;
+                InputHandler.NUM3_TRIGGERED = false;
+                InputHandler.BACKSPACE_TRIGGERED = false;
+                InputHandler.ESC_TRIGGERED = false;
             }
         }
 
@@ -191,6 +213,10 @@ public class Level {
     public void draw(SpriteBatch batch) {
         batch.draw(BARREL_STACK, 10, 168);
         DK.draw(batch);
+
+        if (DK.throwMode) {
+            batch.draw(Ladder.LABEL_0, 220, 170);
+        }
 
         for (Girder girder : girders) {
             girder.draw(batch);

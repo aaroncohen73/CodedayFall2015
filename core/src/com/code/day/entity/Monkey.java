@@ -54,6 +54,12 @@ public class Monkey {
         animTimer = 0.0f;
     }
 
+    public void dropBarrel() {
+        currentAnim = MONKEY_IDLE;
+        throwMode = false;
+        animTimer = 0.0f;
+    }
+
     public void update(float delta) {
         animTimer += delta;
 
