@@ -59,7 +59,7 @@ public class Ladder {
         ladder.x = x;
 
         int beginY = beginning.getYPosAt(x);
-        int endY = beginning.getYPosAt(x);
+        int endY = end.getYPosAt(x);
 
         if (broken) {
             ladder.tilePositions = new Vector2[] {
@@ -69,7 +69,7 @@ public class Ladder {
         } else {
             int numTiles = (int) Math.ceil((beginY - endY) / TILE_HEIGHT);
             ladder.tilePositions = new Vector2[numTiles];
-            for (int i = 1; i < numTiles; i++) {
+            for (int i = 1; i < numTiles + 1; i++) {
                 ladder.tilePositions[i - 1] = new Vector2(x, beginY - (TILE_HEIGHT * i));
             }
         }
@@ -77,6 +77,8 @@ public class Ladder {
         ladder.girder = beginning;
         ladder.nextGirder = end;
         ladder.broken = broken;
+
+        beginning.addLadder(ladder);
 
         return ladder;
     }
