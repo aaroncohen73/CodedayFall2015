@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.code.day.level.Barrel;
 import com.code.day.level.Girder;
+import com.code.day.level.Ladder;
 import com.code.day.level.Level;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class JumpMan {
     private boolean keyRight = false;
 
     private Girder currentGirder = null;
+    private Ladder currentLadder = null;
 
     public JumpMan(float posX, float posY, Girder startGirder){
         position.set(posX, posY);
@@ -63,7 +65,7 @@ public class JumpMan {
 
             // If falling, check if hitting girder, stop falling
             if(velocity.y < 0) {
-                currentGirder = getNearestGirder(Level.girders);
+                currentGirder = getNearestGirder();
 
                 if (Math.abs(position.y - ((position.x * currentGirder.getSlope()) + currentGirder.getYIntercept())) < EPSILON) {
                     jumping = false;
@@ -88,8 +90,16 @@ public class JumpMan {
         keyRight = false;
 
         // TODO: Finish ladder climbing logic
-        if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            keyUp = true;
+        if(Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            Ladder nearestLadder = getNearestLadder();//currentGirder);
+
+            if(nearestLadder != null) {
+                currentLadder = nearestLadder;
+                onLadder = true;
+            }
+
+            keyUp = Gdx.input.isKeyPressed(Input.Keys.UP);
+            keyDown = Gdx.input.isKeyPressed(Input.Keys.DOWN);
         }
 
         // TODO: Finish ladder climbing logic
@@ -103,7 +113,7 @@ public class JumpMan {
         else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT))
             keyRight = true;
 
-        // Jump if not jumping, not on ladder
+        // Jump if NOT jumping AND NOT on ladder
         if(Gdx.input.isKeyPressed(Input.Keys.C) && !jumping && !onLadder){
             jumpPosition = position;
             jumping = true;
@@ -115,8 +125,8 @@ public class JumpMan {
         }
     }
 
-    private Girder getNearestGirder(ArrayList<Girder> girders) {
-        Girder nearestGirder = null;
+    private Girder getNearestGirder() {
+//        Girder nearestGirder = null;
 //        float smallestDist = 0.0f;
 //
 //        for (Girder girder : girders) {
@@ -131,12 +141,28 @@ public class JumpMan {
 //            }
 //        }
 
-        for(Girder girder : girders)
+        for(Girder girder : Level.girders)
             if(position.x >= girder.getBeginning().x && position.x <= girder.getEnd().x)
                 if (position.y > (girder.getBeginning().y + girder.getEnd().y) / 2.0f)
                     return girder;
 
-        return nearestGirder;
+        return null;
+    }
+
+    public Ladder getNearestLadder(){
+        for(Girder girder : Level.girders) {
+            for (Ladder ladder : girder.getLadders()) {
+                if (position.x >= ladder.getX() && position.x <= ladder.getX() + ladder.TILE_WIDTH) {
+                    float midX = (girder.getBeginning().x + girder.getEnd().x) / 2.0f;
+                    float topY = (girder.getSlope() * midX) + girder.getYIntercept();
+
+                    if (position.y <= topY && position.y >= topY - ladder.getHeight())
+                        return ladder;
+                }
+            }
+        }
+
+        return null;
     }
 
     // TODO: Finish drawing sprite function
