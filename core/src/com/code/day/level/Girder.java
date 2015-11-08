@@ -98,7 +98,6 @@ public class Girder {
         Girder girder = new Girder();
 
         girder.beginning = new Vector2(startX, startY);
-        girder.end = new Vector2(endX, endY);
 
         int numTiles = (int) Math.round(Math.abs(endX - startX) / TILE_WIDTH) + 1;
         float deltaX = TILE_WIDTH * (endX > startX ? 1 : -1);
@@ -108,6 +107,8 @@ public class Girder {
         for (int i = 0; i < numTiles; i++) {
             girder.tilePositions[i] = new Vector2(startX + (deltaX * i), startY + (deltaY * i)); //Creating individual tiles
         }
+
+        girder.end = new Vector2(girder.tilePositions[numTiles - 1].x + TILE_WIDTH, endY);
 
         girder.ladders = new ArrayList<Ladder>();
         girder.isLast = isLast;
