@@ -17,8 +17,13 @@ public class Barrel{
     public static final int BARREL_YVEL = 20; // Just some random value
     public static final int EPSILON = 10;
 
-    private static final Animation BARREL_SIDE_ANIM = AnimLoader.loadAnim("barrelSheet.png", 12, 10, 0, 3, 0.1f);
-    private static final Animation BARREL_FRONT_ANIM = AnimLoader.loadAnim("barrelLadderSheet.png", 15, 10, 0, 1, 0.2f);
+    private static final Animation BARREL_SIDE_ANIM = AnimLoader.loadAnim("barrelSheet.png", 12, 10, 0, 3, 0.2f);
+    private static final Animation BARREL_FRONT_ANIM = AnimLoader.loadAnim("barrelLadderSheet.png", 15, 10, 0, 1, 0.4f);
+
+    static {
+        BARREL_FRONT_ANIM.setPlayMode(Animation.PlayMode.LOOP);
+        BARREL_SIDE_ANIM.setPlayMode(Animation.PlayMode.LOOP);
+    }
 
     private float animTimer;
 
@@ -79,6 +84,8 @@ public class Barrel{
     {
         if (beRemoved) return;
 
+        animTimer += delta;
+
         // Check if the barrel is past the current girder
         if(pastCurrentGirder()) {
 
@@ -130,7 +137,6 @@ public class Barrel{
         if (beRemoved) return;
 
         Animation currentAnim = fallMode ? BARREL_FRONT_ANIM : BARREL_SIDE_ANIM;
-
         batch.draw(currentAnim.getKeyFrame(animTimer), position.x, position.y);
     }
 
