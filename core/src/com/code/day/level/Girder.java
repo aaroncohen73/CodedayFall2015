@@ -1,6 +1,7 @@
 package com.code.day.level;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
@@ -50,12 +51,13 @@ public class Girder {
         this.isLast = isLast;
     }
 
-    /**
-     * Get the y position of the top of the girder at a given x value
-     * @param x The X position
-     * @return The y position of the top of the girder if the girder exists there, -1 otherwise
-     */
     public int getYPosAt(int x) {
+        for (Vector2 tilePosition : tilePositions) { //Probably a better way to do this, but meh
+            if (x > tilePosition.x && x < tilePosition.x + TILE_WIDTH) {
+                return (int) Math.floor(tilePosition.y);
+            }
+        }
+
         return -1;
     }
 
@@ -65,6 +67,16 @@ public class Girder {
 
     public Girder getNextGirder(){
         return nextGirder;
+    }
+
+    public void draw(SpriteBatch batch) {
+        for (Vector2 tilePosition : tilePositions) {
+            batch.draw(GIRDER_TILABLE, tilePosition.x, tilePosition.y);
+        }
+
+        for (Ladder ladder : ladders) {
+            ladder.draw(batch);
+        }
     }
 
     public static Girder createGirder(int startX, int startY, int endX, int endY, boolean isLast) {
