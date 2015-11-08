@@ -18,8 +18,8 @@ public class Barrel{
     public static final int EPSILON = 3;
 
     public static final int HEIGHT = 10;
+    public static final int SIDE_WIDTH = 12;
     public static final int FRONT_WIDTH = 15;
-    public static final int SIDE_WIDTH = 10;
 
     private static final Animation BARREL_SIDE_ANIM = AnimLoader.loadAnim("barrelSheet.png", 12, 10, 0, 4, 0.2f);
     private static final Animation BARREL_FRONT_ANIM = AnimLoader.loadAnim("barrelLadderSheet.png", 15, 10, 0, 2, 0.4f);
